@@ -104,31 +104,22 @@ input[type=range]::-moz-range-track {
     background: #ddd;
 }
 
-.start-stop {
-    width: 50px;
-    height: 50px;
-    font-size: 0.7em;
-    text-align: center;
-    background: #1976d2;
-    border-radius: 50%;
-    color: #fff;
-    line-height: 50px;
-    margin: 0 auto;
-    cursor: pointer;
-}
-
-.start-stop:hover {
-    background: #1976d2; 
+.action-button {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
 }
 
 .beats-number-container{
-    width: 50px;
+    width: 30px;
     justify-content: center;
     display: flex;
 }
 
 .slider-container{
     width: 250px;
+    display: flex;
+    justify-content: center;
 }
 
 

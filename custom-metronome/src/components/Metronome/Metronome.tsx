@@ -1,8 +1,9 @@
-import { IconButton, Slider } from '@mui/material';
+import { Button, IconButton, Slider } from '@mui/material';
 
 import React from 'react'
 import './Metronome.scss';
 import NumberController from '../../shared/partials/NumberController';
+import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 
 export default function Metronome() {
   return (
@@ -28,7 +29,12 @@ export default function Metronome() {
               />
             </div>
           } />
-          <div className="start-stop">START</div>
+
+          <section className="action-button">
+            <Button size="large" startIcon={<PlayCircleOutlineIcon />}>
+                Play
+            </Button>
+          </section>
 
           <NumberController component={
             <div className="beats-number-container">4</div>
