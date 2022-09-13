@@ -1,11 +1,48 @@
 import { Button, IconButton, Slider } from '@mui/material';
 
-import React from 'react'
+import React, { Component, useEffect, useState } from 'react'
 import './Metronome.scss';
 import NumberController from '../../shared/partials/NumberController';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
+import StopCircleOutlinedIcon from '@mui/icons-material/StopCircleOutlined';
+import MetronomeService from '../../services/MetronomeService';
+import * as _ from 'lodash';
 
 export default function Metronome() {
+
+  let metronomeDefaultValue: number = 60;
+
+  const [value, setValue] = useState(metronomeDefaultValue);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentPlayStatusText, setCurrentPlayStatusText] = useState("Play");
+  const [currentPlayStatusComponent, setCurrentPlayStatusComponent] = useState(<PlayCircleOutlineIcon />);
+
+  const changeValue = (event: any, value: any) => {
+    metronomeDefaultValue = value;
+    setValue(value);
+  };
+
+  function handlePlayStatus(){
+    let currentStatus = !isPlaying;
+    setIsPlaying(currentStatus);
+    handlePlayStatusView();
+  }
+
+  function handlePlayStatusView(){
+    if(isPlaying){
+      setCurrentPlayStatusText("Play");
+      setCurrentPlayStatusComponent(<PlayCircleOutlineIcon />);
+    }else{
+      setCurrentPlayStatusText("Stop");
+      setCurrentPlayStatusComponent(<StopCircleOutlinedIcon />);
+    }
+  } 
+
+   
+
+
+
+
   return (
     <>
 
@@ -21,19 +58,25 @@ export default function Metronome() {
 
               <Slider
                 aria-label="slider"
-                defaultValue={60}
+                defaultValue={metronomeDefaultValue}
                 min={20}
                 max={280}
                 track={false}
                 valueLabelDisplay="auto"
+                onChange={changeValue}
               />
             </div>
           } />
 
+          
+          
+
           <section className="action-button">
-            <Button size="large" startIcon={<PlayCircleOutlineIcon />}>
-                Play
+            
+            <Button size="large" startIcon={currentPlayStatusComponent} onClick={handlePlayStatus}>
+              {currentPlayStatusText}
             </Button>
+
           </section>
 
           <NumberController component={
