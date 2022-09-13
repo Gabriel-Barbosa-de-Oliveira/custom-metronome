@@ -9,8 +9,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 100%;
 }
+
 .metronome {
     display: flex;
     flex-direction: column;
@@ -117,29 +118,19 @@ input[type=range]::-moz-range-track {
 }
 
 .start-stop:hover {
-    background: #1976d2;
+    background: #1976d2; 
 }
-.measures {
-    display: flex;
+
+.beats-number-container{
+    width: 50px;
     justify-content: center;
-    align-items: center;
+    display: flex;
 }
-.measures .stepper {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    border: 1px solid #ddd;
-    text-align: center;
-    margin: 0 5px;
-    cursor: pointer;
+
+.slider-container{
+    width: 250px;
 }
-.measures .stepper:hover {
-    background: #1976d2;
-    color: #fff;
-}
-.measures .add-beats {
-    line-height: 20px;
-}
+
 
 .beats-per-measure-text {
     text-align: center;
