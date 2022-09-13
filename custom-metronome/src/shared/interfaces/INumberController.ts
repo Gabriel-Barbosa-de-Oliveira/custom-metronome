@@ -1,3 +1,4 @@
 export interface INumberController {
-    component: any
+    component: JSX.Element,
+    onButtonClick: any
 }

@@ -10,38 +10,46 @@ import * as _ from 'lodash';
 
 export default function Metronome() {
 
-  let metronomeDefaultValue: number = 60;
-
-  const [value, setValue] = useState(metronomeDefaultValue);
+  const [metronomeValue, setValue] = useState(60);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentPlayStatusText, setCurrentPlayStatusText] = useState("Play");
   const [currentPlayStatusComponent, setCurrentPlayStatusComponent] = useState(<PlayCircleOutlineIcon />);
 
   const changeValue = (event: any, value: any) => {
-    metronomeDefaultValue = value;
-    setValue(value);
+    setNewMetronomeValue(value);
   };
 
-  function handlePlayStatus(){
+  function setNewMetronomeValue(value: number) {
+    setValue(value);
+  }
+
+  function handlePlayStatus() {
     let currentStatus = !isPlaying;
     setIsPlaying(currentStatus);
     handlePlayStatusView();
   }
 
-  function handlePlayStatusView(){
-    if(isPlaying){
+  function handlePlayStatusView() {
+    if (isPlaying) {
       setCurrentPlayStatusText("Play");
       setCurrentPlayStatusComponent(<PlayCircleOutlineIcon />);
-    }else{
+    } else {
       setCurrentPlayStatusText("Stop");
       setCurrentPlayStatusComponent(<StopCircleOutlinedIcon />);
     }
-  } 
-
-   
+  }
 
 
+  function handleBeatChange(clickedOption: string): void {
+    let newValue = metronomeValue;
+    clickedOption == "add" ? newValue++ : newValue--;
+    setNewMetronomeValue(newValue)
+  }
 
+  function handleMeasuresChange(clickedOption: string) {
+    console.log(clickedOption)
+
+  }
 
   return (
     <>
@@ -49,16 +57,16 @@ export default function Metronome() {
       <section className="container">
         <section className="metronome">
           <div className="bpm-display">
-            <span className="tempo">140</span>
+            <span className="tempo">{metronomeValue}</span>
             <span className="bpm">BPM</span>
           </div>
           <div className="tempo-text">Nice and steady</div>
-          <NumberController component={
+          <NumberController onButtonClick={handleBeatChange} component={
             <div className='slider-container'>
 
               <Slider
                 aria-label="slider"
-                defaultValue={metronomeDefaultValue}
+                defaultValue={60}
                 min={20}
                 max={280}
                 track={false}
@@ -68,18 +76,18 @@ export default function Metronome() {
             </div>
           } />
 
-          
-          
+
+
 
           <section className="action-button">
-            
+
             <Button size="large" startIcon={currentPlayStatusComponent} onClick={handlePlayStatus}>
               {currentPlayStatusText}
             </Button>
 
           </section>
 
-          <NumberController component={
+          <NumberController onButtonClick={handleMeasuresChange} component={
             <div className="beats-number-container">4</div>
           } />
 
