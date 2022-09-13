@@ -14,6 +14,7 @@ export default function Metronome() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentPlayStatusText, setCurrentPlayStatusText] = useState("Play");
   const [currentPlayStatusComponent, setCurrentPlayStatusComponent] = useState(<PlayCircleOutlineIcon />);
+  const [beatsNumber, setBeatsNumber] = useState(4);
 
   const changeValue = (event: any, value: any) => {
     setNewMetronomeValue(value);
@@ -43,17 +44,24 @@ export default function Metronome() {
   function handleBeatChange(clickedOption: string): void {
     let newValue = metronomeValue;
     clickedOption == "add" ? newValue++ : newValue--;
-    if (checkIfBeatNumberIsValid(newValue))
+    if (checkIfTimeNumberIsValid(newValue))
       setNewMetronomeValue(newValue)
   }
 
-  function checkIfBeatNumberIsValid(value: number) {
+  function checkIfTimeNumberIsValid(value: number) {
     return value >= 20 && value <= 280 ? true : false;
   }
 
   function handleMeasuresChange(clickedOption: string) {
-    console.log(clickedOption)
+    let newValue = beatsNumber;
+    clickedOption == "add" ? newValue++ : newValue--;
+    if (checkIfBeatNumberIsValid(newValue))
+      setBeatsNumber(newValue)
 
+  }
+
+  function checkIfBeatNumberIsValid(value: number) {
+    return value >=2 && value <= 12  ? true : false;
   }
 
   return (
@@ -93,7 +101,7 @@ export default function Metronome() {
           </section>
 
           <NumberController onButtonClick={handleMeasuresChange} component={
-            <div className="beats-number-container">4</div>
+            <div className="beats-number-container">{beatsNumber}</div>
           } />
 
           <span className="beats-per-measure-text">Beats per measure</span>
