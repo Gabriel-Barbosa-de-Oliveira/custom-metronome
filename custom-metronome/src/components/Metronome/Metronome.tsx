@@ -43,7 +43,12 @@ export default function Metronome() {
   function handleBeatChange(clickedOption: string): void {
     let newValue = metronomeValue;
     clickedOption == "add" ? newValue++ : newValue--;
-    setNewMetronomeValue(newValue)
+    if (checkIfBeatNumberIsValid(newValue))
+      setNewMetronomeValue(newValue)
+  }
+
+  function checkIfBeatNumberIsValid(value: number) {
+    return value >= 20 && value <= 280 ? true : false;
   }
 
   function handleMeasuresChange(clickedOption: string) {
