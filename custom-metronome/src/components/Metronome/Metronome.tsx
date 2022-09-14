@@ -15,6 +15,8 @@ export default function Metronome() {
   const [currentPlayStatusText, setCurrentPlayStatusText] = useState("Play");
   const [currentPlayStatusComponent, setCurrentPlayStatusComponent] = useState(<PlayCircleOutlineIcon />);
   const [beatsNumber, setBeatsNumber] = useState(4);
+  const click1 = new Audio(require('./click1.mp3'));
+  const click2 = new Audio(require('./click2.mp3'));
 
   const changeValue = (event: any, value: any) => {
     setNewMetronomeValue(value);
@@ -36,6 +38,7 @@ export default function Metronome() {
       setCurrentPlayStatusComponent(<PlayCircleOutlineIcon />);
     } else {
       setCurrentPlayStatusText("Stop");
+      click1.play();
       setCurrentPlayStatusComponent(<StopCircleOutlinedIcon />);
     }
   }
