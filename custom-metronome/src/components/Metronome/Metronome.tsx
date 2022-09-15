@@ -46,12 +46,12 @@ export default function Metronome() {
     count = 0;
     if (isPlaying) {
       setCurrentPlayStatusText("Play");
-      metronome.stop();
+      metronomeInstance.stop();
       setCurrentPlayStatusComponent(<PlayCircleOutlineIcon />);
       setNewMetronomeInstance();
     } else {
       setCurrentPlayStatusText("Stop");
-      metronome.start();
+      metronomeInstance.start();
       setCurrentPlayStatusComponent(<StopCircleOutlinedIcon />);
     }
   }
