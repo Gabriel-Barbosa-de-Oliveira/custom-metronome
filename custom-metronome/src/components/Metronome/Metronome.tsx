@@ -7,16 +7,26 @@ import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import StopCircleOutlinedIcon from '@mui/icons-material/StopCircleOutlined';
 import MetronomeService from '../../services/MetronomeService';
 import * as _ from 'lodash';
+import Timer from '../../shared/services/timer';
 
 export default function Metronome() {
-
   const [metronomeValue, setValue] = useState(60);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentPlayStatusText, setCurrentPlayStatusText] = useState("Play");
   const [currentPlayStatusComponent, setCurrentPlayStatusComponent] = useState(<PlayCircleOutlineIcon />);
   const [beatsNumber, setBeatsNumber] = useState(4);
+  const [metronome, setMetronome] = useState(new Timer(handleMetronomeClick, 60000 / metronomeValue, { immediate: true }));
+  let metronomeInstance = metronome;
   const click1 = new Audio(require('./click1.mp3'));
   const click2 = new Audio(require('./click2.mp3'));
+
+
+  let count = 0;
+  
+  function setNewMetronomeInstance(){
+    setMetronome(new Timer(handleMetronomeClick, 60000 / metronomeValue, { immediate: true }));
+    metronomeInstance = metronome;
+  }
 
   const changeValue = (event: any, value: any) => {
     setNewMetronomeValue(value);
@@ -33,15 +43,35 @@ export default function Metronome() {
   }
 
   function handlePlayStatusView() {
+    count = 0;
     if (isPlaying) {
       setCurrentPlayStatusText("Play");
+      metronome.stop();
       setCurrentPlayStatusComponent(<PlayCircleOutlineIcon />);
+      setNewMetronomeInstance();
     } else {
       setCurrentPlayStatusText("Stop");
-      click1.play();
+      metronome.start();
       setCurrentPlayStatusComponent(<StopCircleOutlinedIcon />);
     }
   }
+
+  function handleMetronomeClick() {
+    console.log(count);
+    if (count === beatsNumber) {
+      count = 0;
+    }
+    if (count === 0) {
+      click1.play();
+      click1.currentTime = 0;
+    } else {
+      click2.play();
+      click2.currentTime = 0;
+    }
+    count++;
+  }
+
+
 
 
   function handleBeatChange(clickedOption: string): void {
@@ -64,7 +94,7 @@ export default function Metronome() {
   }
 
   function checkIfBeatNumberIsValid(value: number) {
-    return value >=2 && value <= 12  ? true : false;
+    return value >= 2 && value <= 12 ? true : false;
   }
 
   return (
