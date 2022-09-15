@@ -34,6 +34,7 @@ export default function Metronome() {
 
   function setNewMetronomeValue(value: number) {
     setValue(value);
+    metronome.timeInterval = 60000 / metronomeValue;
   }
 
   function handlePlayStatus() {
@@ -79,6 +80,7 @@ export default function Metronome() {
     clickedOption == "add" ? newValue++ : newValue--;
     if (checkIfTimeNumberIsValid(newValue))
       setNewMetronomeValue(newValue)
+      metronome.timeInterval = 60000 / metronomeValue;
   }
 
   function checkIfTimeNumberIsValid(value: number) {
