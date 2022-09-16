@@ -1,114 +1,176 @@
-import { Button, IconButton, Slider } from '@mui/material';
-
-import React, { Component, useEffect, useState } from 'react'
-import './Metronome.scss';
+import { Button, Slider } from '@mui/material';
+import { Component } from 'react';
 import NumberController from '../../shared/partials/NumberController';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import StopCircleOutlinedIcon from '@mui/icons-material/StopCircleOutlined';
-import MetronomeService from '../../services/MetronomeService';
-import * as _ from 'lodash';
+import "./Metronome.scss";
+import Timer from '../../shared/services/timer';
 
-export default function Metronome() {
+const click1 = "./click1.mp3";
+const click2 = "./click2.mp3";
 
-  const [metronomeValue, setValue] = useState(60);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentPlayStatusText, setCurrentPlayStatusText] = useState("Play");
-  const [currentPlayStatusComponent, setCurrentPlayStatusComponent] = useState(<PlayCircleOutlineIcon />);
-  const [beatsNumber, setBeatsNumber] = useState(4);
+type IMetronomeState = {
+    isPlaying: boolean,
+    count: number,
+    metronomeValue: number,
+    beatsNumber: number,
+    currentPlayStatusComponent: JSX.Element,
+    currentPlayStatusText: string
+};
 
-  const changeValue = (event: any, value: any) => {
-    setNewMetronomeValue(value);
-  };
+export default class Metronome extends Component<{}, IMetronomeState>{
 
-  function setNewMetronomeValue(value: number) {
-    setValue(value);
-  }
+    private click1: HTMLAudioElement = new Audio(require('./click1.mp3'));
+    private click2: HTMLAudioElement = new Audio(require('./click2.mp3'));
 
-  function handlePlayStatus() {
-    let currentStatus = !isPlaying;
-    setIsPlaying(currentStatus);
-    handlePlayStatusView();
-  }
-
-  function handlePlayStatusView() {
-    if (isPlaying) {
-      setCurrentPlayStatusText("Play");
-      setCurrentPlayStatusComponent(<PlayCircleOutlineIcon />);
-    } else {
-      setCurrentPlayStatusText("Stop");
-      setCurrentPlayStatusComponent(<StopCircleOutlinedIcon />);
+    metronomeInstance: any;
+    constructor(props: any) {
+        super(props);
+        this.state = {
+            isPlaying: false,
+            count: 0,
+            metronomeValue: 60,
+            beatsNumber: 4,
+            currentPlayStatusComponent: <PlayCircleOutlineIcon />,
+            currentPlayStatusText: "Play"
+        };
+        this.metronomeInstance = new Timer(() => { this.handleMetronomeClick() }, 60000 / this.state.metronomeValue, { immediate: true });
     }
-  }
 
+    changeValue = (event: any, value: any) => {
+        this.setNewMetronomeValue(value);
+    };
 
-  function handleBeatChange(clickedOption: string): void {
-    let newValue = metronomeValue;
-    clickedOption == "add" ? newValue++ : newValue--;
-    if (checkIfTimeNumberIsValid(newValue))
-      setNewMetronomeValue(newValue)
-  }
+    setNewMetronomeValue = (value: number) => {
+        this.setState({
+            metronomeValue: value
+        })
+        this.metronomeInstance.timeInterval = 60000 / this.state.metronomeValue;
+    }
 
-  function checkIfTimeNumberIsValid(value: number) {
-    return value >= 20 && value <= 280 ? true : false;
-  }
+    handlePlayStatus = () => {
+        let currentStatus = !this.state.isPlaying;
+        this.setState({
+            isPlaying: currentStatus
+        })
+        this.handlePlayStatusView();
+    }
 
-  function handleMeasuresChange(clickedOption: string) {
-    let newValue = beatsNumber;
-    clickedOption == "add" ? newValue++ : newValue--;
-    if (checkIfBeatNumberIsValid(newValue))
-      setBeatsNumber(newValue)
+    handlePlayStatusView = () => {
+        let { isPlaying } = this.state;
+        this.setState({ count: 0 });
+        if (isPlaying) {
+            this.metronomeInstance.stop();
+            this.setState({
+                currentPlayStatusText: "Play",
+                currentPlayStatusComponent: <PlayCircleOutlineIcon />
+            })
+        } else {
+            this.metronomeInstance.start();
+            this.setState({
+                currentPlayStatusText: "Stop",
+                currentPlayStatusComponent: <StopCircleOutlinedIcon />
+            })
+        }
+    }
 
-  }
+    handleMetronomeClick = () => {
+        debugger;
+        let { beatsNumber } = this.state;
+        let newCount = this.state.count;
+        console.log(newCount);
+        if (newCount === beatsNumber) {
+            newCount = 0;
+        }
+        if (newCount === 0) {
+            this.click1.play();
+            this.click1.currentTime = 0;
+        } else {
+            this.click2.play();
+            this.click2.currentTime = 0;
+        }
+        newCount++
+        this.setState({
+            count: newCount,
+        })
+    }
 
-  function checkIfBeatNumberIsValid(value: number) {
-    return value >=2 && value <= 12  ? true : false;
-  }
+    handleBeatChange = (clickedOption: string) => {
+        debugger;
+        let newValue = this.state.metronomeValue;
+        clickedOption == "add" ? newValue++ : newValue--;
+        if (this.checkIfTimeNumberIsValid(newValue))
+            this.setNewMetronomeValue(newValue)
+    }
 
-  return (
-    <>
+    checkIfTimeNumberIsValid = (value: number) => {
+        return value >= 20 && value <= 280 ? true : false;
+    }
 
-      <section className="container">
-        <section className="metronome">
-          <div className="bpm-display">
-            <span className="tempo">{metronomeValue}</span>
-            <span className="bpm">BPM</span>
-          </div>
-          <div className="tempo-text">Nice and steady</div>
-          <NumberController onButtonClick={handleBeatChange} component={
-            <div className='slider-container'>
+    handleMeasuresChange = (clickedOption: string) => {
+        let newValue = this.state.beatsNumber;
+        debugger;
+        clickedOption == "add" ? newValue++ : newValue--;
+        if (this.checkIfBeatNumberIsValid(newValue)) {
+            this.setState({
+                beatsNumber: newValue,
+                count: 0
+            })
+            // this.setNewMetronomeInstance()
+        }
+    }
+    checkIfBeatNumberIsValid = (value: number) => {
+        return value >= 2 && value <= 12 ? true : false;
+    }
 
-              <Slider
-                aria-label="slider"
-                defaultValue={60}
-                min={20}
-                max={280}
-                track={false}
-                valueLabelDisplay="auto"
-                onChange={changeValue}
-              />
-            </div>
-          } />
+    render() {
 
+        const { metronomeValue, beatsNumber, currentPlayStatusComponent, currentPlayStatusText } = this.state;
 
+        return (
+            <>
 
+                <section className="container">
+                    <section className="metronome">
+                        <div className="bpm-display">
+                            <span className="tempo">{metronomeValue}</span>
+                            <span className="bpm">BPM</span>
+                        </div>
+                        <div className="tempo-text">Nice and steady</div>
+                        <NumberController onButtonClick={this.handleBeatChange} component={
+                            <div className='slider-container'>
 
-          <section className="action-button">
+                                <Slider
+                                    aria-label="slider"
+                                    defaultValue={60}
+                                    min={20}
+                                    max={280}
+                                    track={false}
+                                    value={metronomeValue}
+                                    valueLabelDisplay="auto"
+                                    onChange={this.changeValue}
+                                />
+                            </div>
+                        } />
 
-            <Button size="large" startIcon={currentPlayStatusComponent} onClick={handlePlayStatus}>
-              {currentPlayStatusText}
-            </Button>
+                        <section className="action-button">
 
-          </section>
+                            <Button size="large" startIcon={currentPlayStatusComponent} onClick={this.handlePlayStatus}>
+                                {currentPlayStatusText}
+                            </Button>
 
-          <NumberController onButtonClick={handleMeasuresChange} component={
-            <div className="beats-number-container">{beatsNumber}</div>
-          } />
+                        </section>
 
-          <span className="beats-per-measure-text">Beats per measure</span>
+                        <NumberController onButtonClick={this.handleMeasuresChange} component={
+                            <div className="beats-number-container">{beatsNumber}</div>
+                        } />
 
-        </section>
-      </section>
+                        <span className="beats-per-measure-text">Beats per measure</span>
 
-    </>
-  )
+                    </section>
+                </section>
+
+            </>
+        )
+    }
 }
