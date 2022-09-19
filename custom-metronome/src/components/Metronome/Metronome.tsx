@@ -5,6 +5,7 @@ import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import StopCircleOutlinedIcon from '@mui/icons-material/StopCircleOutlined';
 import "./Metronome.scss";
 import Timer from '../../shared/services/timer';
+import { Howl, Howler } from 'howler';
 
 const click1 = "./click1.mp3";
 const click2 = "./click2.mp3";
@@ -20,8 +21,12 @@ type IMetronomeState = {
 
 export default class Metronome extends Component<{}, IMetronomeState>{
 
-    private click1: HTMLAudioElement = new Audio(require('./click1.mp3'));
-    private click2: HTMLAudioElement = new Audio(require('./click2.mp3'));
+    private click1: Howl = new Howl({
+        src: require('./click1.mp3')
+    });
+    private click2: Howl = new Howl({
+        src: require('./click2.mp3')
+    });
 
     metronomeInstance: any;
     constructor(props: any) {
@@ -35,6 +40,7 @@ export default class Metronome extends Component<{}, IMetronomeState>{
             currentPlayStatusText: "Play"
         };
         this.metronomeInstance = new Timer(() => { this.handleMetronomeClick() }, 60000 / this.state.metronomeValue, { immediate: true });
+        Howler.volume(1)
     }
 
     changeValue = (event: any, value: any) => {
@@ -75,7 +81,7 @@ export default class Metronome extends Component<{}, IMetronomeState>{
     }
 
     handleMetronomeClick = () => {
-        debugger;
+        
         let { beatsNumber } = this.state;
         let newCount = this.state.count;
         console.log(newCount);
@@ -84,10 +90,10 @@ export default class Metronome extends Component<{}, IMetronomeState>{
         }
         if (newCount === 0) {
             this.click1.play();
-            this.click1.currentTime = 0;
+            // this.click1.currentTime = 0;
         } else {
             this.click2.play();
-            this.click2.currentTime = 0;
+            // this.click2.currentTime = 0;
         }
         newCount++
         this.setState({
@@ -96,7 +102,7 @@ export default class Metronome extends Component<{}, IMetronomeState>{
     }
 
     handleBeatChange = (clickedOption: string) => {
-        debugger;
+        
         let newValue = this.state.metronomeValue;
         clickedOption == "add" ? newValue++ : newValue--;
         if (this.checkIfTimeNumberIsValid(newValue))
@@ -109,7 +115,7 @@ export default class Metronome extends Component<{}, IMetronomeState>{
 
     handleMeasuresChange = (clickedOption: string) => {
         let newValue = this.state.beatsNumber;
-        debugger;
+        
         clickedOption == "add" ? newValue++ : newValue--;
         if (this.checkIfBeatNumberIsValid(newValue)) {
             this.setState({
