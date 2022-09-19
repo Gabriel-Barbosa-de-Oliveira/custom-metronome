@@ -1,0 +1,11 @@
+.number-controller-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .component-container {
+        width: auto;
+        display: flex;
+        justify-content: center;
+    }
+}
