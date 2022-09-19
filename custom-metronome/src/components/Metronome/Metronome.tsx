@@ -81,7 +81,7 @@ export default class Metronome extends Component<{}, IMetronomeState>{
     }
 
     handleMetronomeClick = () => {
-        debugger;
+        
         let { beatsNumber } = this.state;
         let newCount = this.state.count;
         console.log(newCount);
@@ -102,7 +102,7 @@ export default class Metronome extends Component<{}, IMetronomeState>{
     }
 
     handleBeatChange = (clickedOption: string) => {
-        debugger;
+        
         let newValue = this.state.metronomeValue;
         clickedOption == "add" ? newValue++ : newValue--;
         if (this.checkIfTimeNumberIsValid(newValue))
@@ -115,7 +115,7 @@ export default class Metronome extends Component<{}, IMetronomeState>{
 
     handleMeasuresChange = (clickedOption: string) => {
         let newValue = this.state.beatsNumber;
-        debugger;
+        
         clickedOption == "add" ? newValue++ : newValue--;
         if (this.checkIfBeatNumberIsValid(newValue)) {
             this.setState({
