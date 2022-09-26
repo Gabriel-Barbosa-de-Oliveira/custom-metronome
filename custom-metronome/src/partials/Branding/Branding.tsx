@@ -17,7 +17,7 @@ export default class Branding extends Component {
                         <h3>Evolua, treine e controle com mais eficiência seus resultados</h3>
                         <section className='branding-actions'>
                             <ThemeProvider theme={newTheme}>
-                                <Button variant="contained" color="neutral">Acessar</Button>
+                                <Button variant="contained" color="neutral">Acesse aqui</Button>
                             </ThemeProvider>
                         </section>
                     </section>

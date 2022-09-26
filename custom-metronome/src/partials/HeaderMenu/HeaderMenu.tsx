@@ -10,7 +10,7 @@ export default class HeaderMenu extends Component {
 
 
     render() {
-        const imgUrl: string = require("../../assets/img/logo.png");
+        const imgUrl: string = require("../../assets/img/logo-grey.png");
 
  
 
@@ -19,7 +19,7 @@ export default class HeaderMenu extends Component {
                 <img src={imgUrl} alt="Logo" className='header-logo' />
                 <section className='header-actions'>
                     <ThemeProvider theme={newTheme}>
-                        <Button variant="outlined" color="neutral">Acessar</Button>
+                        <Button variant="outlined" color="neutral">Começar</Button>
                         <Button variant="outlined" color="neutral" disabled={true}>Login</Button>
                     </ThemeProvider>
                 </section>
