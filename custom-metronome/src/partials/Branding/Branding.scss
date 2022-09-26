@@ -32,3 +32,23 @@
         }
     }
 }
+
+@media only screen and (max-width: 480px) {
+    .branding-container {
+        margin-top: 30px;
+        grid-template-columns: 1fr;
+        .branding-call{
+            h1{
+                font-size: 40px;
+            }
+        }
+    }
+}
+
+@media only screen and (min-width: 1300px) {
+    .branding-container {
+        margin: 64px auto;
+        max-width: 1296px;
+    }
+}
+

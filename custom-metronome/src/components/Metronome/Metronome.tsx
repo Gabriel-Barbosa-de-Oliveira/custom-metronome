@@ -7,9 +7,6 @@ import "./Metronome.scss";
 import Timer from '../../shared/services/timer';
 import { Howl, Howler } from 'howler';
 
-const click1 = "./click1.mp3";
-const click2 = "./click2.mp3";
-
 type IMetronomeState = {
     isPlaying: boolean,
     count: number,
@@ -104,7 +101,7 @@ export default class Metronome extends Component<{}, IMetronomeState>{
     handleBeatChange = (clickedOption: string) => {
         
         let newValue = this.state.metronomeValue;
-        clickedOption == "add" ? newValue++ : newValue--;
+        clickedOption === "add" ? newValue++ : newValue--;
         if (this.checkIfTimeNumberIsValid(newValue))
             this.setNewMetronomeValue(newValue)
     }
@@ -116,7 +113,7 @@ export default class Metronome extends Component<{}, IMetronomeState>{
     handleMeasuresChange = (clickedOption: string) => {
         let newValue = this.state.beatsNumber;
         
-        clickedOption == "add" ? newValue++ : newValue--;
+        clickedOption === "add" ? newValue++ : newValue--;
         if (this.checkIfBeatNumberIsValid(newValue)) {
             this.setState({
                 beatsNumber: newValue,
