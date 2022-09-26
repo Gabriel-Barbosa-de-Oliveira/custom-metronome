@@ -3,6 +3,7 @@ import { Component } from 'react'
 import "./Branding.scss"
 import { ThemeProvider } from '@mui/material/styles';
 import newTheme from '../../shared/services/button-color-creator.service';
+import { Link } from 'react-router-dom';
 
 export default class Branding extends Component {
     render() {
@@ -17,7 +18,7 @@ export default class Branding extends Component {
                         <h3>Evolua, treine e controle com mais eficiência seus resultados</h3>
                         <section className='branding-actions'>
                             <ThemeProvider theme={newTheme}>
-                                <Button variant="contained" color="neutral">Acesse aqui</Button>
+                                <Button variant="contained" color="neutral" component={Link} to={"/metronome/"}>Acesse aqui</Button>
                             </ThemeProvider>
                         </section>
                     </section>
