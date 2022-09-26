@@ -7,7 +7,7 @@ export default class HeaderMenu extends Component {
 
 
     render() {
-        const imgUrl: string = require("../assets/img/logo.png");
+        const imgUrl: string = require("../../assets/img/logo.png");
 
         const theme = createTheme({
             palette: {
