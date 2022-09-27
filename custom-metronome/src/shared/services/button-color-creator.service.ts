@@ -6,17 +6,23 @@ const newTheme: Theme = createTheme({
             main: '#64748B',
             contrastText: '#fff',
         },
+        white: {
+            main: '#fff',
+            contrastText: '#fff',
+        },
     },
 });
 
 declare module '@mui/material/styles' {
     interface Palette {
         neutral: Palette['primary'];
+        white: Palette['primary'];
     }
 
     // allow configuration using `createTheme`
     interface PaletteOptions {
         neutral?: PaletteOptions['primary'];
+        white?: PaletteOptions['primary'];
     }
 }
 
@@ -24,6 +30,7 @@ declare module '@mui/material/styles' {
 declare module '@mui/material/Button' {
     interface ButtonPropsColorOverrides {
         neutral: true;
+        white: true;
     }
 }
 

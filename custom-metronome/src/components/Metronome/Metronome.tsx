@@ -6,6 +6,7 @@ import StopCircleOutlinedIcon from '@mui/icons-material/StopCircleOutlined';
 import "./Metronome.scss";
 import Timer from '../../shared/services/timer';
 import { Howl, Howler } from 'howler';
+import HeaderMenu from '../../partials/HeaderMenu/HeaderMenu';
 
 type IMetronomeState = {
     isPlaying: boolean,
@@ -132,7 +133,7 @@ export default class Metronome extends Component<{}, IMetronomeState>{
 
         return (
             <>
-
+                <HeaderMenu />
                 <section className="container">
                     <section className="metronome">
                         <div className="bpm-display">

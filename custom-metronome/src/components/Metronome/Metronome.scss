@@ -6,16 +6,12 @@
 }
 
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
+    margin: 64px auto;
 }
 
 .metronome {
     display: flex;
     flex-direction: column;
-    width: 50vw;
     height: 250px;
     justify-content: space-between;
 }
@@ -51,7 +47,7 @@
     cursor: pointer;
 }
 .tempo-settings .adjust-tempo-btn:hover {
-    background: #1976d2;
+    background: #64748B;
     color: #fff;
 }
 .tempo-settings .decrease-tempo {
@@ -59,49 +55,6 @@
 }
 .tempo-settings .increase-tempo {
     line-height: 32px;
-}
-
-input[type=range] {
-    -webkit-appearance: none;
-    background-color: transparent;
-    width: 70%;
-}
-input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-}
-input[type=range]:focus {
-    outline: none;
-}
-
-input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: #1976d2;
-    cursor: pointer;
-    margin-top: -8px;
-}
-input[type=range]::-moz-range-thumb {
-    -webkit-appearance: none;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: #1976d2;
-    cursor: pointer;
-    border: none;
-}
-
-input[type=range]::-webkit-slider-runnable-track {
-    width: 100%;
-    height: 1px;
-    background: #ddd;
-}
-
-input[type=range]::-moz-range-track {
-    width: 100%;
-    height: 1px;
-    background: #ddd;
 }
 
 .action-button {
