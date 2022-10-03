@@ -1,20 +1,22 @@
 import React, { Component } from 'react'
-import { IPulseController } from '../../shared/interfaces/IPulseController';
+import { IPulseControllerProps } from '../../shared/interfaces/props/IPulseControllerProps';
+import { IPulseControllerState } from '../../shared/interfaces/states/IPulseController';
 import "./PulseController.scss";
-export default class PulseController extends Component<{}, IPulseController> {
+export default class PulseController extends Component<IPulseControllerProps, IPulseControllerState> {
 
-    constructor(props: any) {
-        super(props);
+    constructor(props: IPulseControllerProps) {
+        super(props); 
         this.state = {
             beatsNumber: 4 
         };
     }
     render() {
-        let dots: Array<JSX.Element> = [];
+        let dots: Array<JSX.Element> = []; 
 
-        for (let index = 0; index < this.state.beatsNumber; index++) {
-            dots.push(<span className="dot"></span>);
-        }
+        this.props.pulses.forEach(element => {
+            const classActive: string = element.isActive ? "active" : "";
+            dots.push(<span className={`dot ${classActive}`}></span>);
+        });
 
         return (
             <div className='pulse-control-container'>

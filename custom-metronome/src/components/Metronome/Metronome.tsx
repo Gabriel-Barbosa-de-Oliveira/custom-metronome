@@ -8,6 +8,8 @@ import Timer from '../../shared/services/timer';
 import { Howl, Howler } from 'howler';
 import HeaderMenu from '../../shared/partials/HeaderMenu/HeaderMenu';
 import PulseController from '../../partials/PulseController/PulseController';
+import { IPulseControllerProps } from '../../shared/interfaces/props/IPulseControllerProps';
+import { IPulseControllerControlObject } from '../../shared/interfaces/props/IPulseControllerControlObject';
 
 type IMetronomeState = {
     isPlaying: boolean,
@@ -26,6 +28,32 @@ export default class Metronome extends Component<{}, IMetronomeState>{
     private click2: Howl = new Howl({
         src: require('./click2.mp3')
     });
+
+    private pulses: Array<IPulseControllerControlObject> =
+        [
+            {
+                id: "1",
+                isActive: true,
+                position: 0
+            },
+            {
+                id: "2",
+                isActive: true,
+                position: 1
+            },
+            {
+                id: "3",
+                isActive: true,
+                position: 2
+            },
+            {
+                id: "4",
+                isActive: true,
+                position: 3
+            }
+        ]
+
+
 
     metronomeInstance: any;
     constructor(props: any) {
@@ -143,7 +171,7 @@ export default class Metronome extends Component<{}, IMetronomeState>{
                             </div>
                             <div className="tempo-text">Nice and steady</div>
                             <section className='pulse-controller-container'>
-                                <PulseController />
+                                <PulseController pulses={this.pulses} />
                             </section>
                             <NumberController onButtonClick={this.handleBeatChange} component={
                                 <div className='slider-container'>
