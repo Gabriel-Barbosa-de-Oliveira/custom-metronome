@@ -17,10 +17,11 @@ type IMetronomeState = {
     metronomeValue: number,
     beatsNumber: number,
     currentPlayStatusComponent: JSX.Element,
-    currentPlayStatusText: string
+    currentPlayStatusText: string,
+    currentPulses: Array<IPulseControllerControlObject>;
 };
 
-export default class Metronome extends Component<{}, IMetronomeState>{
+export default class Metronome extends Component<{}, IMetronomeState> {
 
     private click1: Howl = new Howl({
         src: require('./click1.mp3')
@@ -28,32 +29,6 @@ export default class Metronome extends Component<{}, IMetronomeState>{
     private click2: Howl = new Howl({
         src: require('./click2.mp3')
     });
-
-    private pulses: Array<IPulseControllerControlObject> =
-        [
-            {
-                id: "1",
-                isActive: true,
-                position: 0
-            },
-            {
-                id: "2",
-                isActive: true,
-                position: 1
-            },
-            {
-                id: "3",
-                isActive: true,
-                position: 2
-            },
-            {
-                id: "4",
-                isActive: true,
-                position: 3
-            }
-        ]
-
-
 
     metronomeInstance: any;
     constructor(props: any) {
@@ -64,10 +39,44 @@ export default class Metronome extends Component<{}, IMetronomeState>{
             metronomeValue: 60,
             beatsNumber: 4,
             currentPlayStatusComponent: <PlayCircleOutlineIcon />,
-            currentPlayStatusText: "Play"
+            currentPlayStatusText: "Play",
+            currentPulses: []
         };
         this.metronomeInstance = new Timer(() => { this.handleMetronomeClick() }, 60000 / this.state.metronomeValue, { immediate: true });
+        this.mapInitialPulses();
         Howler.volume(1)
+    }
+
+    // componentDidMount() {
+    //     this.mapInitialPulses(true);
+    // }
+
+    mapInitialPulses(initialState?: boolean) {
+        const beatsQuantity: number = this.state.beatsNumber;
+        const { currentPulses } = this.state;
+        for (let index = 0; index < beatsQuantity; index++) {
+            currentPulses.push({
+                id: (index + 1).toString(),
+                isActive: index === 0 ? true : false,
+                position: index
+            })
+        }
+    }
+
+    addNewPulse(): Array<IPulseControllerControlObject> {
+        const { currentPulses } = this.state;
+        currentPulses.push({
+            id: (currentPulses.length + 2).toString(),
+            isActive: false,
+            position: currentPulses.length
+        })
+        return currentPulses
+    }
+
+    removeLastPulse(): Array<IPulseControllerControlObject> {
+        const { currentPulses } = this.state;
+        currentPulses.pop();
+        return currentPulses;
     }
 
     changeValue = (event: any, value: any) => {
@@ -142,15 +151,25 @@ export default class Metronome extends Component<{}, IMetronomeState>{
 
     handleMeasuresChange = (clickedOption: string) => {
         let newValue = this.state.beatsNumber;
-
-        clickedOption === "add" ? newValue++ : newValue--;
+        let newPulses: Array<IPulseControllerControlObject> = [];
+        if (clickedOption === "add") {
+            newValue++;
+            newPulses = this.addNewPulse();
+        } else {
+            newValue--;
+            newPulses = this.removeLastPulse();
+        };
         if (this.checkIfBeatNumberIsValid(newValue)) {
+
             this.setState({
                 beatsNumber: newValue,
-                count: 0
+                count: 0,
+                currentPulses: newPulses
+
             })
         }
     }
+
     checkIfBeatNumberIsValid = (value: number) => {
         return value >= 2 && value <= 12 ? true : false;
     }
@@ -171,7 +190,7 @@ export default class Metronome extends Component<{}, IMetronomeState>{
                             </div>
                             <div className="tempo-text">Nice and steady</div>
                             <section className='pulse-controller-container'>
-                                <PulseController pulses={this.pulses} />
+                                <PulseController pulses={this.state.currentPulses} />
                             </section>
                             <NumberController onButtonClick={this.handleBeatChange} component={
                                 <div className='slider-container'>

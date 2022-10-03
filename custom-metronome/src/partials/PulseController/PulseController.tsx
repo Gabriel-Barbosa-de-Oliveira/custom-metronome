@@ -15,7 +15,7 @@ export default class PulseController extends Component<IPulseControllerProps, IP
 
         this.props.pulses.forEach(element => {
             const classActive: string = element.isActive ? "active" : "";
-            dots.push(<span className={`dot ${classActive}`}></span>);
+            dots.push(<span className={`dot ${classActive}`} key={element.id}></span>);
         });
 
         return (
