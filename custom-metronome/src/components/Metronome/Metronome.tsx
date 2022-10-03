@@ -1,12 +1,13 @@
 import { Button, Slider } from '@mui/material';
 import { Component } from 'react';
-import NumberController from '../../shared/partials/NumberController';
+import NumberController from '../../shared/partials/NumberController/NumberController';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import StopCircleOutlinedIcon from '@mui/icons-material/StopCircleOutlined';
 import "./Metronome.scss";
 import Timer from '../../shared/services/timer';
 import { Howl, Howler } from 'howler';
-import HeaderMenu from '../../partials/HeaderMenu/HeaderMenu';
+import HeaderMenu from '../../shared/partials/HeaderMenu/HeaderMenu';
+import PulseController from '../../partials/PulseController/PulseController';
 
 type IMetronomeState = {
     isPlaying: boolean,
@@ -79,7 +80,7 @@ export default class Metronome extends Component<{}, IMetronomeState>{
     }
 
     handleMetronomeClick = () => {
-        
+
         let { beatsNumber } = this.state;
         let newCount = this.state.count;
         console.log(newCount);
@@ -100,7 +101,7 @@ export default class Metronome extends Component<{}, IMetronomeState>{
     }
 
     handleBeatChange = (clickedOption: string) => {
-        
+
         let newValue = this.state.metronomeValue;
         clickedOption === "add" ? newValue++ : newValue--;
         if (this.checkIfTimeNumberIsValid(newValue))
@@ -113,14 +114,13 @@ export default class Metronome extends Component<{}, IMetronomeState>{
 
     handleMeasuresChange = (clickedOption: string) => {
         let newValue = this.state.beatsNumber;
-        
+
         clickedOption === "add" ? newValue++ : newValue--;
         if (this.checkIfBeatNumberIsValid(newValue)) {
             this.setState({
                 beatsNumber: newValue,
                 count: 0
             })
-            // this.setNewMetronomeInstance()
         }
     }
     checkIfBeatNumberIsValid = (value: number) => {
@@ -136,41 +136,51 @@ export default class Metronome extends Component<{}, IMetronomeState>{
                 <HeaderMenu />
                 <section className="container">
                     <section className="metronome">
-                        <div className="bpm-display">
-                            <span className="tempo">{metronomeValue}</span>
-                            <span className="bpm">BPM</span>
-                        </div>
-                        <div className="tempo-text">Nice and steady</div>
-                        <NumberController onButtonClick={this.handleBeatChange} component={
-                            <div className='slider-container'>
-
-                                <Slider
-                                    aria-label="slider"
-                                    defaultValue={60}
-                                    min={20}
-                                    max={280}
-                                    track={false}
-                                    value={metronomeValue}
-                                    valueLabelDisplay="auto"
-                                    onChange={this.changeValue}
-                                />
+                        <section>
+                            <div className="bpm-display">
+                                <span className="tempo">{metronomeValue}</span>
+                                <span className="bpm">BPM</span>
                             </div>
-                        } />
+                            <div className="tempo-text">Nice and steady</div>
+                            <section className='pulse-controller-container'>
+                                <PulseController />
+                            </section>
+                            <NumberController onButtonClick={this.handleBeatChange} component={
+                                <div className='slider-container'>
 
-                        <section className="action-button">
+                                    <Slider
+                                        aria-label="slider"
+                                        defaultValue={60}
+                                        min={20}
+                                        max={280}
+                                        track={false}
+                                        value={metronomeValue}
+                                        valueLabelDisplay="auto"
+                                        onChange={this.changeValue}
+                                    />
+                                </div>
+                            } />
 
-                            <Button size="large" startIcon={currentPlayStatusComponent} onClick={this.handlePlayStatus}>
-                                {currentPlayStatusText}
-                            </Button>
+                            <section className="action-button">
+                                <Button size="large" startIcon={currentPlayStatusComponent} onClick={this.handlePlayStatus}>
+                                    {currentPlayStatusText}
+                                </Button>
+                            </section>
 
+                            <NumberController onButtonClick={this.handleMeasuresChange} component={
+                                <div className="beats-number-container">{beatsNumber}</div>
+                            } />
+
+                            <div className="beats-per-measure-text">
+                                <span >Beats per measure</span>
+                            </div>
                         </section>
-
-                        <NumberController onButtonClick={this.handleMeasuresChange} component={
-                            <div className="beats-number-container">{beatsNumber}</div>
-                        } />
-
-                        <span className="beats-per-measure-text">Beats per measure</span>
-
+                        <section>
+                            <div className='sub-text'>
+                                <h1>Texto de Explicação</h1>
+                                <p>Utilize os controles de tempo para obter a forma definitiva de marcação de ritmo</p>
+                            </div>
+                        </section>
                     </section>
                 </section>
 

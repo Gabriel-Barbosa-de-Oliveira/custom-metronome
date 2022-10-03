@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 
 import "./HeaderMenu.scss";
 import { ThemeProvider } from '@mui/material/styles';
-import newTheme from '../../shared/services/button-color-creator.service';
+import newTheme from '../../services/button-color-creator.service';
 import { Link } from 'react-router-dom';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
@@ -23,7 +23,7 @@ export default class HeaderMenu extends Component<{}, any> {
         }
     }
     render() {
-        const imgUrl: string = require("../../assets/img/logo-white.png");
+        const imgUrl: string = require("../../../assets/img/logo-white.png");
 
         const toggleDrawer =
             (anchor: string, open: boolean) =>

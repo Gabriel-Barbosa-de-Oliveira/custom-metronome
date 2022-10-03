@@ -1,5 +1,3 @@
-
-
 * {
     margin: 0;
     padding: 0;
@@ -10,20 +8,22 @@
 }
 
 .metronome {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     height: 250px;
-    justify-content: space-between;
 }
+
 .bpm-display {
     width: 100%;
     text-align: center;
     color: #1976d2;
     font-weight: bold;
 }
+
 .bpm-display .tempo {
     font-size: 5em;
 }
+
 .tempo-text {
     font-size: 15px;
     text-transform: uppercase;
@@ -46,13 +46,16 @@
     text-align: center;
     cursor: pointer;
 }
+
 .tempo-settings .adjust-tempo-btn:hover {
     background: #64748B;
     color: #fff;
 }
+
 .tempo-settings .decrease-tempo {
     line-height: 25px;
 }
+
 .tempo-settings .increase-tempo {
     line-height: 32px;
 }
@@ -63,13 +66,13 @@
     margin-bottom: 16px;
 }
 
-.beats-number-container{
+.beats-number-container {
     width: 30px;
     justify-content: center;
     display: flex;
 }
 
-.slider-container{
+.slider-container {
     width: 250px;
     display: flex;
     justify-content: center;
@@ -77,7 +80,37 @@
 
 
 .beats-per-measure-text {
+    margin-top: 4px;
     text-align: center;
-    font-size: 0.5em;
+    font-size: 10px;
     text-transform: uppercase;
+}
+
+.sub-text {
+
+    h1 {
+        font-size: 20px;
+    }
+
+    p {
+        margin-top: 16px;
+    }
+}
+
+.pulse-controller-container {
+    align-self: center;
+    display: flex;
+    justify-content: center;
+    margin: 16px 0;
+}
+
+@media only screen and (max-width: 480px) {
+    .metronome {
+        grid-template-columns: 1fr;
+        grid-gap: 32px;
+    }
+
+    .sub-text {
+        padding: 16px;
+    }
 }

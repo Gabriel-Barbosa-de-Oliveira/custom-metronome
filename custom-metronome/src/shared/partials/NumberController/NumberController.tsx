@@ -1,5 +1,5 @@
 import { IconButton } from '@mui/material';
-import { INumberController } from '../interfaces/INumberController';
+import { INumberController } from '../../interfaces/INumberController';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 
