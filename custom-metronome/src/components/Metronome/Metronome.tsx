@@ -8,7 +8,6 @@ import Timer from '../../shared/services/timer';
 import { Howl, Howler } from 'howler';
 import HeaderMenu from '../../shared/partials/HeaderMenu/HeaderMenu';
 import PulseController from '../../partials/PulseController/PulseController';
-import { IPulseControllerProps } from '../../shared/interfaces/props/IPulseControllerProps';
 import { IPulseControllerControlObject } from '../../shared/interfaces/props/IPulseControllerControlObject';
 
 type IMetronomeState = {
@@ -150,6 +149,7 @@ export default class Metronome extends Component<{}, IMetronomeState> {
     }
 
     handleMeasuresChange = (clickedOption: string) => {
+        debugger;
         let newValue = this.state.beatsNumber;
         let newPulses: Array<IPulseControllerControlObject> = [];
         if (clickedOption === "add") {
@@ -174,6 +174,10 @@ export default class Metronome extends Component<{}, IMetronomeState> {
         return value >= 2 && value <= 12 ? true : false;
     }
 
+    handlePulseIntensityChange = (newPulses: Array<IPulseControllerControlObject>) => {
+        this.setState({ currentPulses: newPulses })
+    }
+
     render() {
 
         const { metronomeValue, beatsNumber, currentPlayStatusComponent, currentPlayStatusText } = this.state;
@@ -190,7 +194,7 @@ export default class Metronome extends Component<{}, IMetronomeState> {
                             </div>
                             <div className="tempo-text">Nice and steady</div>
                             <section className='pulse-controller-container'>
-                                <PulseController pulses={this.state.currentPulses} />
+                                <PulseController changed={this.handlePulseIntensityChange} pulses={this.state.currentPulses} />
                             </section>
                             <NumberController onButtonClick={this.handleBeatChange} component={
                                 <div className='slider-container'>
@@ -214,7 +218,7 @@ export default class Metronome extends Component<{}, IMetronomeState> {
                                 </Button>
                             </section>
 
-                            <NumberController onButtonClick={this.handleMeasuresChange} component={
+                            <NumberController disableLeft={(this.state.beatsNumber == 2)} disableRight={(this.state.beatsNumber == 12)} onButtonClick={this.handleMeasuresChange} component={
                                 <div className="beats-number-container">{beatsNumber}</div>
                             } />
 

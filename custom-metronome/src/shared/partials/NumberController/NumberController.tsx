@@ -15,11 +15,11 @@ export default function NumberController(props: INumberController) {
 
     return (
         <section className='number-controller-container'>
-            <IconButton color="primary" aria-label="decrease velocity" component="label" onClick={() => handleButtonClick("remove")} >
+            <IconButton color="primary" aria-label="decrease velocity" component="label" onClick={() => handleButtonClick("remove")} disabled={props.disableLeft} >
                 <RemoveCircleOutlineIcon />
             </IconButton>
             <div className='component-container'>{props.component}</div>
-            <IconButton color="primary" aria-label="raise velocity" component="label" onClick={() => handleButtonClick("add")}>
+            <IconButton color="primary" aria-label="raise velocity" component="label" onClick={() => handleButtonClick("add")} disabled={props.disableRight}>
                 <AddCircleOutlineIcon />
             </IconButton>
         </section>
