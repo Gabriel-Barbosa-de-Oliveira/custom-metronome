@@ -47,10 +47,6 @@ export default class Metronome extends Component<{}, IMetronomeState> {
         Howler.volume(1)
     }
 
-    // componentDidMount() {
-    //     this.mapInitialPulses(true);
-    // }
-
     mapInitialPulses(initialState?: boolean) {
         const beatsQuantity: number = this.state.beatsNumber;
         const { currentPulses } = this.state;
@@ -230,8 +226,10 @@ export default class Metronome extends Component<{}, IMetronomeState> {
                         </section>
                         <section>
                             <div className='sub-text'>
-                                <h1>Texto de Explicação</h1>
+                                <h1>Custom Metronome</h1>
                                 <p>Utilize os controles de tempo para obter a forma definitiva de marcação de ritmo</p>
+                                <p>Azul = Nota com acentuação</p>
+                                <p>Cinza = Nota sem acentuação</p>
                             </div>
                         </section>
                     </section>
