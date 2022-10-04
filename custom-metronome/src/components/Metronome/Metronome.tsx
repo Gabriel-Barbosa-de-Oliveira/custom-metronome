@@ -9,6 +9,7 @@ import { Howl, Howler } from 'howler';
 import HeaderMenu from '../../shared/partials/HeaderMenu/HeaderMenu';
 import PulseController from '../../partials/PulseController/PulseController';
 import { IPulseControllerControlObject } from '../../shared/interfaces/props/IPulseControllerControlObject';
+import _ from 'lodash';
 
 type IMetronomeState = {
     isPlaying: boolean,
@@ -123,13 +124,15 @@ export default class Metronome extends Component<{}, IMetronomeState> {
         if (newCount === beatsNumber) {
             newCount = 0;
         }
-        if (newCount === 0) {
+
+        let index = this.state.currentPulses.findIndex(x => (x.position === newCount && x.isActive));
+
+        if(index != -1){
             this.click1.play();
-            // this.click1.currentTime = 0;
-        } else {
+        }else{
             this.click2.play();
-            // this.click2.currentTime = 0;
         }
+
         newCount++
         this.setState({
             count: newCount,
@@ -149,7 +152,6 @@ export default class Metronome extends Component<{}, IMetronomeState> {
     }
 
     handleMeasuresChange = (clickedOption: string) => {
-        debugger;
         let newValue = this.state.beatsNumber;
         let newPulses: Array<IPulseControllerControlObject> = [];
         if (clickedOption === "add") {
@@ -175,7 +177,7 @@ export default class Metronome extends Component<{}, IMetronomeState> {
     }
 
     handlePulseIntensityChange = (newPulses: Array<IPulseControllerControlObject>) => {
-        this.setState({ currentPulses: newPulses })
+        this.setState({ currentPulses: newPulses, count: 0 })
     }
 
     render() {
