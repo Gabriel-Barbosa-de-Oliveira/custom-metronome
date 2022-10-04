@@ -24,10 +24,10 @@ type IMetronomeState = {
 export default class Metronome extends Component<{}, IMetronomeState> {
 
     private click1: Howl = new Howl({
-        src: require('./click1.mp3')
+        src: require('./click2.mp3')
     });
     private click2: Howl = new Howl({
-        src: require('./click2.mp3')
+        src: require('./click1.mp3')
     });
 
     metronomeInstance: any;
