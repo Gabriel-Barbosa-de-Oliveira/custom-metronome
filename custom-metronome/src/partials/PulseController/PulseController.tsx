@@ -20,11 +20,6 @@ export default class PulseController extends Component<IPulseControllerProps, IP
     }
 
     mountDots() {
-
-        // if (this.dots.length > 0) {
-        //     this.dots = [];
-        // }
-
         this.props.pulses.forEach((element, index) => {
             const classActive: string = element.isActive ? "active" : "";
             this.dots.push(<span onClick={() => this.handleItemClick(element, index)} className={`dot ${classActive}`} key={element.position} id={element.position.toString()}></span>);
@@ -43,7 +38,17 @@ export default class PulseController extends Component<IPulseControllerProps, IP
                 htmlItem.className = "dot";
             }
         }
+
+        this.emitChange(this.props.pulses)
+
     }
+
+    emitChange(value: any) {
+        if (this.props.changed) {
+            this.props.changed(value);
+        }
+    }
+
 
 
     render() {
