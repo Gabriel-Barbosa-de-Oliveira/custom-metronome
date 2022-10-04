@@ -43,7 +43,7 @@ export default class HeaderMenu extends Component<{}, any> {
                     <Button variant="text" color="primary" component={Link} to={"/"}><img src={imgUrl} alt="Logo" className='header-logo' /> </Button>
                     <section className='header-actions'>
                         <ThemeProvider theme={newTheme}>
-                            <Button variant="outlined" color="white" component={Link} to={"/metronome/"} id="start">Começar</Button>
+                            {/* <Button variant="outlined" color="white" component={Link} to={"/metronome/"} id="start">Começar</Button> */}
                             <Button variant="outlined" color="white" disabled={true} id="login">Login</Button>
                             <IconButton onClick={toggleDrawer("right", true)} id="mobile-button">
                                 <MenuIcon />
