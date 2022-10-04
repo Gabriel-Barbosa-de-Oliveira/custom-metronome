@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 
 import "./HeaderMenu.scss";
 import { ThemeProvider } from '@mui/material/styles';
-import newTheme from '../../shared/services/button-color-creator.service';
+import newTheme from '../../services/button-color-creator.service';
 import { Link } from 'react-router-dom';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
@@ -23,7 +23,7 @@ export default class HeaderMenu extends Component<{}, any> {
         }
     }
     render() {
-        const imgUrl: string = require("../../assets/img/logo-grey.png");
+        const imgUrl: string = require("../../../assets/img/logo-white.png");
 
         const toggleDrawer =
             (anchor: string, open: boolean) =>
@@ -40,11 +40,11 @@ export default class HeaderMenu extends Component<{}, any> {
         return (
             <>
                 <header className='header-menu-container'>
-                    <img src={imgUrl} alt="Logo" className='header-logo' />
+                    <Button variant="text" color="primary" component={Link} to={"/"}><img src={imgUrl} alt="Logo" className='header-logo' /> </Button>
                     <section className='header-actions'>
                         <ThemeProvider theme={newTheme}>
-                            <Button variant="outlined" color="neutral" component={Link} to={"/metronome/"} id="start">Começar</Button>
-                            <Button variant="outlined" color="neutral" disabled={true} id="login">Login</Button>
+                            {/* <Button variant="outlined" color="white" component={Link} to={"/metronome/"} id="start">Começar</Button> */}
+                            <Button variant="outlined" color="white" disabled={true} id="login">Login</Button>
                             <IconButton onClick={toggleDrawer("right", true)} id="mobile-button">
                                 <MenuIcon />
                             </IconButton>
