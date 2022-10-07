@@ -34,14 +34,26 @@
 }
 
 @media only screen and (max-width: 480px) {
-    .devices-container {
-        grid-template-columns: 1fr;
-        grid-gap: 64px;
+    .use-it-everywhere-container {
+        margin-top: 32px;
+
+        header {
+            h2{
+                font-size: 35px;
+            }
+            h3 {
+                margin-top: 32px;
+            }
+        }
     }
 
     .devices-container {
+        grid-template-columns: 1fr;
+        grid-gap: 64px;
+
         img {
             height: 100px;
         }
     }
+
 }
