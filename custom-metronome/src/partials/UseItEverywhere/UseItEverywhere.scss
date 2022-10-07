@@ -1,4 +1,4 @@
-.use-it-everywhere-container{
+.use-it-everywhere-container {
     display: grid;
     grid-template-columns: 1fr;
     align-items: center;
@@ -9,24 +9,25 @@
 }
 
 .devices-container {
-    margin-top: 64px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     text-align: center;
     width: 100%;
-    img{
+
+    img {
         height: 300px;
     }
 }
 
 @media only screen and (max-width: 850px) {
     .devices-container {
+        margin-top: 64px;
         grid-template-columns: 1fr;
         grid-gap: 64px;
     }
 
     .devices-container {
-        img{
+        img {
             height: 300px;
         }
     }
@@ -39,7 +40,7 @@
     }
 
     .devices-container {
-        img{
+        img {
             height: 100px;
         }
     }

@@ -23,7 +23,7 @@ export default class HeaderMenu extends Component<{}, any> {
         }
     }
     render() {
-        const imgUrl: string = require("../../../assets/img/logo-white.png");
+        const imgUrl: string = require("../../../assets/img/logo-black.png");
 
         const toggleDrawer =
             (anchor: string, open: boolean) =>
@@ -57,12 +57,6 @@ export default class HeaderMenu extends Component<{}, any> {
                     onClose={toggleDrawer("right", false)}
                 >
                     <List>
-                        <ListItem>
-                            <ListItemButton component={Link} to={"/metronome/"}>
-                                <ListItemText primary={"Começar"} />
-                            </ListItemButton>
-                        </ListItem>
-                        <Divider />
                         <ListItem>
                             <ListItemButton disabled={true}>
                                 <ListItemText primary={"Login"} />
