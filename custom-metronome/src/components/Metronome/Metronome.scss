@@ -113,6 +113,7 @@
 @media only screen and (max-width: 480px) {
     .metronome {
         grid-template-columns: 1fr;
+        height: auto;
     }
 
     .sub-text {

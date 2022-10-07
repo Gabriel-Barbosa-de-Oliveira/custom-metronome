@@ -8,7 +8,30 @@ import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import { PlayArrow } from '@mui/icons-material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-export default class Playlist extends Component {
+import { SimpleDialog } from '../../partials/Dialog/SimpleDialog';
+export default class Playlist extends Component<{}, any> {
+
+
+
+    constructor(props: any) {
+        super(props);
+        this.state = {
+            open: false
+        }
+    }
+
+    handleOpen = () => {
+        this.setState({
+            open: true
+        })
+    }
+
+    handleClose = () => {
+        this.setState({
+            open: false
+        })
+    }
+
     render() {
         return (
             <Box sx={{ width: '100%', maxWidth: "100%", bgcolor: 'background.paper', color: "#000" }}>
@@ -33,7 +56,7 @@ export default class Playlist extends Component {
                             </ListItemButton>
                         </ListItem>
                         <ListItem >
-                            <ListItemButton>
+                            <ListItemButton onClick={this.handleOpen}>
                                 <ListItemIcon>
                                     <AddCircleOutlineIcon />
                                 </ListItemIcon>
@@ -42,6 +65,11 @@ export default class Playlist extends Component {
                         </ListItem>
                     </List>
                 </nav>
+
+                <SimpleDialog
+                    open={this.state.open}
+                    onClose={this.handleClose}
+                />
             </Box>
         )
     }
