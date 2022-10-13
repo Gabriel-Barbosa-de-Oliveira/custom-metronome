@@ -9,6 +9,7 @@ import {
   Route,
 } from "react-router-dom";
 import Landing from './components/Landing/Landing';
+import Authenticator from './components/Authenticator/Authenticator';
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,14 @@ const router = createBrowserRouter([
   {
     path: "/metronome",
     element: <Metronome />
+  },
+  {
+    path: "/login",
+    element: <Authenticator cardState='login' />
+  },
+  {
+    path: "/new-user",
+    element: <Authenticator cardState='new-user' />
   }
 ]);
 

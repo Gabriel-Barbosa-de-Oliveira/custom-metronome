@@ -44,7 +44,7 @@ export default class HeaderMenu extends Component<{}, any> {
                     <section className='header-actions'>
                         <ThemeProvider theme={newTheme}>
                             {/* <Button variant="outlined" color="white" component={Link} to={"/metronome/"} id="start">Começar</Button> */}
-                            <Button variant="outlined" color="white" disabled={true} id="login">Login</Button>
+                            <Button variant="outlined" color="primary" id="login" component={Link} to={"/login"}>Login</Button>
                             <IconButton onClick={toggleDrawer("right", true)} id="mobile-button">
                                 <MenuIcon />
                             </IconButton>
@@ -58,7 +58,7 @@ export default class HeaderMenu extends Component<{}, any> {
                 >
                     <List>
                         <ListItem>
-                            <ListItemButton disabled={true}>
+                            <ListItemButton component={Link} to={"/login"}>
                                 <ListItemText primary={"Login"} />
                             </ListItemButton>
                         </ListItem>
