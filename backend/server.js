@@ -65,17 +65,17 @@ server.post("/session/create-session", (req, res) => {
 
 server.post('/session/create-user', (req, res) => {
   const db = userdb.db; // Assign the lowdb instance
-  
+
   if (Array.isArray(req.body)) {
-      req.body.forEach(element => {
-          insert(db, 'users', element); // Add a post
-      });
+    req.body.forEach(element => {
+      insert(db, 'users', element); // Add a post
+    });
   }
   else {
-      insert(db, 'users', createUser(req.body)); // Add a post
+    insert(db, 'users', createUser(req.body)); // Add a post
   }
   res.sendStatus(200)
-  
+
   /**
    * Checks whether the id of the new data already exists in the DB
    * @param {*} db - DB object
@@ -83,11 +83,11 @@ server.post('/session/create-user', (req, res) => {
    * @param {*} data - New record
    */
   function insert(db, collection, data) {
-      const table = db.get(collection);
-      console.log(table)
-      if (_.isEmpty(table.find(data).value())) {
-          table.push(data).write();
-      }
+    const table = db.get(collection);
+    console.log(table)
+    if (_.isEmpty(table.find(data).value())) {
+      table.push(data).write();
+    }
   }
 });
 
@@ -97,6 +97,10 @@ server.get("/session/user", (req, res) => {
   } else {
     res.status(401).json({ status: 401, message: "Não autenticado" });
   }
+});
+
+server.get("/health", (req, res) => {
+  res.status(200).json({ up: true }); 
 });
 
 server.post("/session/logout", (req, res) => {

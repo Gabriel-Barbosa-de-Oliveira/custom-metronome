@@ -10,6 +10,7 @@ import {
 } from "react-router-dom";
 import Landing from './components/Landing/Landing';
 import Authenticator from './components/Authenticator/Authenticator';
+import { ToastContainer } from 'react-toastify';
 
 const router = createBrowserRouter([
   {
@@ -32,7 +33,10 @@ const router = createBrowserRouter([
 
 function App() {
   return (
+    <>
       <RouterProvider router={router} />
+      <ToastContainer />
+    </>
   );
 }
 

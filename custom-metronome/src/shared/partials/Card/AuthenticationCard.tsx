@@ -27,9 +27,6 @@ export default class AuthenticationCard extends Component<IAuthenticator, any> {
                         this.props.cardState === "login" ? login : newUser
                     }
                 </CardContent>
-                <footer className="authenticator-actions">
-                    <Button size="small" component={Link} to={"/metronome"}>Enviar</Button>
-                </footer>
             </React.Fragment>
         );
 
