@@ -1,9 +1,7 @@
 {
     "users": [
         {
-            "id": "1",
-            "name": "Gabriel Barbosa",
-            "email": "barbosagabrieloliveira@hotmail.com",
+            "userId": "1",
             "playlists": []
         }
     ]

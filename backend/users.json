@@ -1,0 +1,23 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "nome": "Usuário 1",
+      "email": "usuario@email.com",
+      "senha": "1234"
+    },
+    {
+      "id": 2,
+      "nome": "Usuário 2",
+      "email": "usuario2@email.com",
+      "senha": "react"
+    },
+    {
+      "id": "c2f3df06-f197-4ad9-acad-8d48d55b89b2",
+      "name": "Teste",
+      "email": "teste",
+      "password": "123",
+      "playlists": []
+    }
+  ]
+}
