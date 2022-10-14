@@ -5,28 +5,17 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
-import TextField from '@mui/material/TextField';
-import FormControl from '@mui/material/FormControl';
+import Login from '../../../partials/Login/Login';
+import NewUser from '../../../partials/NewUser/NewUser';
 
 export default class AuthenticationCard extends Component<IAuthenticator, any> {
 
 
     render() {
 
-        const login: JSX.Element = (
-            <FormControl fullWidth sx={{ display: "grid", gridTemplateColumns: "1fr", gridGap: 16 }} variant="standard">
-                <TextField id="outlined-basic" label="E-mail" variant="standard" />
-                <TextField id="outlined-basic" label="Senha" variant="standard" type={"password"} />
-            </FormControl>
-        );
+        const login: JSX.Element = <Login />
 
-        const newUser: JSX.Element = (
-            <FormControl fullWidth sx={{ display: "grid", gridTemplateColumns: "1fr", gridGap: 16 }} variant="standard">
-                <TextField id="outlined-basic" label="Nome" variant="standard" />
-                <TextField id="outlined-basic" label="E-mail" variant="standard" />
-                <TextField id="outlined-basic" label="Senha" variant="standard" type={"password"} />
-            </FormControl>
-        );
+        const newUser: JSX.Element = <NewUser />
 
         const card: JSX.Element = (
             <React.Fragment>
@@ -39,7 +28,7 @@ export default class AuthenticationCard extends Component<IAuthenticator, any> {
                     }
                 </CardContent>
                 <footer className="authenticator-actions">
-                    <Button size="small">Enviar</Button>
+                    <Button size="small" component={Link} to={"/metronome"}>Enviar</Button>
                 </footer>
             </React.Fragment>
         );
