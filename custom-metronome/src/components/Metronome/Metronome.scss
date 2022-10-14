@@ -4,13 +4,14 @@
 }
 
 .container {
-    margin: 64px auto;
+    margin-top: 100px;
+    height: 100%;
 }
 
 .metronome {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    height: 250px;
+    grid-template-columns: 30% 70%;
+    height: calc(100% - 200px)
 }
 
 .bpm-display {
@@ -63,7 +64,7 @@
 .action-button {
     display: flex;
     justify-content: center;
-    margin-bottom: 16px;
+    margin-bottom: 10px;
 }
 
 .beats-number-container {
@@ -87,14 +88,19 @@
 }
 
 .sub-text {
-
-    h1 {
-        font-size: 20px;
-    }
-
     p {
+        font-size: 15px;
         margin-top: 16px;
+        color: #000;
+        span{
+            color: #1976d2;
+        }
     }
+}
+
+.application-mode {
+    text-align: center;
+    width: 100%;
 }
 
 .pulse-controller-container {
@@ -107,7 +113,7 @@
 @media only screen and (max-width: 480px) {
     .metronome {
         grid-template-columns: 1fr;
-        grid-gap: 32px;
+        height: auto;
     }
 
     .sub-text {

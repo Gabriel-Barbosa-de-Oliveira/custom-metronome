@@ -10,6 +10,8 @@ import HeaderMenu from '../../shared/partials/HeaderMenu/HeaderMenu';
 import PulseController from '../../partials/PulseController/PulseController';
 import { IPulseControllerControlObject } from '../../shared/interfaces/props/IPulseControllerControlObject';
 import _ from 'lodash';
+import Footer from '../../partials/Footer/Footer';
+import Playlist from '../Playlist/Playlist';
 
 type IMetronomeState = {
     isPlaying: boolean,
@@ -123,9 +125,9 @@ export default class Metronome extends Component<{}, IMetronomeState> {
 
         let index = this.state.currentPulses.findIndex(x => (x.position === newCount && x.isActive));
 
-        if(index != -1){
+        if (index != -1) {
             this.click1.play();
-        }else{
+        } else {
             this.click2.play();
         }
 
@@ -186,53 +188,58 @@ export default class Metronome extends Component<{}, IMetronomeState> {
                 <section className="container">
                     <section className="metronome">
                         <section>
-                            <div className="bpm-display">
-                                <span className="tempo">{metronomeValue}</span>
-                                <span className="bpm">BPM</span>
-                            </div>
-                            <div className="tempo-text">Nice and steady</div>
-                            <section className='pulse-controller-container'>
-                                <PulseController changed={this.handlePulseIntensityChange} pulses={this.state.currentPulses} />
-                            </section>
-                            <NumberController onButtonClick={this.handleBeatChange} component={
-                                <div className='slider-container'>
+                            <div>
 
-                                    <Slider
-                                        aria-label="slider"
-                                        defaultValue={60}
-                                        min={20}
-                                        max={280}
-                                        track={false}
-                                        value={metronomeValue}
-                                        valueLabelDisplay="auto"
-                                        onChange={this.changeValue}
-                                    />
+                                <div className="bpm-display">
+                                    <span className="tempo">{metronomeValue}</span>
+                                    <span className="bpm">BPM</span>
                                 </div>
-                            } />
+                                <section className='pulse-controller-container'>
+                                    <PulseController changed={this.handlePulseIntensityChange} pulses={this.state.currentPulses} />
+                                </section>
+                                <NumberController onButtonClick={this.handleBeatChange} component={
+                                    <div className='slider-container'>
 
-                            <section className="action-button">
-                                <Button size="large" startIcon={currentPlayStatusComponent} onClick={this.handlePlayStatus}>
-                                    {currentPlayStatusText}
-                                </Button>
-                            </section>
+                                        <Slider
+                                            aria-label="slider"
+                                            defaultValue={60}
+                                            min={20}
+                                            max={280}
+                                            track={false}
+                                            value={metronomeValue}
+                                            valueLabelDisplay="auto"
+                                            onChange={this.changeValue}
+                                        />
+                                    </div>
+                                } />
 
-                            <NumberController disableLeft={(this.state.beatsNumber == 2)} disableRight={(this.state.beatsNumber == 12)} onButtonClick={this.handleMeasuresChange} component={
-                                <div className="beats-number-container">{beatsNumber}</div>
-                            } />
+                                <section className="action-button">
+                                    <Button size="large" startIcon={currentPlayStatusComponent} onClick={this.handlePlayStatus}>
+                                        {currentPlayStatusText}
+                                    </Button>
+                                </section>
 
-                            <div className="beats-per-measure-text">
-                                <span >Beats per measure</span>
+                                <NumberController disableLeft={(this.state.beatsNumber == 2)} disableRight={(this.state.beatsNumber == 12)} onButtonClick={this.handleMeasuresChange} component={
+                                    <div className="beats-number-container">{beatsNumber}</div>
+                                } />
+
+                                <div className="beats-per-measure-text">
+                                    <span>Batidas por Compasso</span>
+                                </div>
+                            </div>
+                            <div className='sub-text'>
+                                <p><span><b>Azul</b></span> = Nota com acentuação</p>
+                                <p><b>Cinza</b> = Nota sem acentuação</p>
+                                <p>Selecione a batida que gostaria de acentuar clickando no circulo abaixo dos bpms</p>
                             </div>
                         </section>
-                        <section>
-                            <div className='sub-text'>
-                                <h1>Custom Metronome</h1>
-                                <p>Utilize os controles de tempo para obter a forma definitiva de marcação de ritmo</p>
-                                <p>Azul = Nota com acentuação</p>
-                                <p>Cinza = Nota sem acentuação</p>
-                            </div>
+
+                        <section className='application-mode'>
+                            <Playlist />
                         </section>
                     </section>
+
+                    <Footer />
                 </section>
 
             </>

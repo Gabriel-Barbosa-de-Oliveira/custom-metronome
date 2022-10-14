@@ -1,0 +1,44 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "nome": "Usuário 1",
+      "email": "usuario@email.com",
+      "senha": "1234"
+    },
+    {
+      "id": 2,
+      "nome": "Usuário 2",
+      "email": "usuario2@email.com",
+      "senha": "react"
+    },
+    {
+      "id": "c2f3df06-f197-4ad9-acad-8d48d55b89b2",
+      "name": "Teste",
+      "email": "teste",
+      "password": "123",
+      "playlists": []
+    },
+    {
+      "id": "fa83705d-85b6-4ce7-ad30-b70b51ad7a2a",
+      "name": "novo usuario",
+      "email": "novouser@emai.com",
+      "password": "123",
+      "playlists": []
+    },
+    {
+      "id": "0e3acebb-9cc3-47b7-aeb3-cc32d527a072",
+      "name": "teste",
+      "email": "teste",
+      "password": "teste",
+      "playlists": []
+    },
+    {
+      "id": "a2a66c8b-3ccc-4f64-aa93-6303482433db",
+      "name": "gabriel",
+      "email": "teste@teste.com",
+      "password": "1234",
+      "playlists": []
+    }
+  ]
+}

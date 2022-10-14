@@ -4,4 +4,20 @@ body {
   font-family: 'Roboto', sans-serif;
   color: #1976d2;
   user-select: none;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 60px;
+  font-weight: 400;
+}
+
+h2 {
+  font-size: 40px;
+  font-weight: 400;
+}
+
+h3{
+  font-size: 20px;
+  font-weight: 200;
 }
