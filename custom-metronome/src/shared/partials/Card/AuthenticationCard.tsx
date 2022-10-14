@@ -2,10 +2,9 @@ import React, { Component } from 'react'
 import { IAuthenticator } from '../../interfaces/props/IAuthenticator'
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import { Link } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
 
@@ -33,15 +32,15 @@ export default class AuthenticationCard extends Component<IAuthenticator, any> {
             <React.Fragment>
                 <CardContent>
                     <header className='header-container'>
-                        <img src={require("../../../assets/img/logo-black.png")} alt="Logo"/>
+                        <Button variant="text" color="primary" component={Link} to={"/"}><img src={require("../../../assets/img/logo-black.png")} alt="Logo" /></Button>
                     </header>
                     {
                         this.props.cardState === "login" ? login : newUser
                     }
                 </CardContent>
-                <CardActions>
-                    <Button size="small">Learn More</Button>
-                </CardActions>
+                <footer className="authenticator-actions">
+                    <Button size="small">Enviar</Button>
+                </footer>
             </React.Fragment>
         );
 

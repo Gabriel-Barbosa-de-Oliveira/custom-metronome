@@ -43,8 +43,8 @@ export default class HeaderMenu extends Component<{}, any> {
                     <Button variant="text" color="primary" component={Link} to={"/"}><img src={imgUrl} alt="Logo" className='header-logo' /> </Button>
                     <section className='header-actions'>
                         <ThemeProvider theme={newTheme}>
-                            {/* <Button variant="outlined" color="white" component={Link} to={"/metronome/"} id="start">Começar</Button> */}
-                            <Button variant="outlined" color="primary" id="login" component={Link} to={"/login"}>Login</Button>
+                            <Button variant="contained" color="primary" id="new-user" component={Link} to={"/new-user"}>Cadastre-se</Button>
+                            <Button variant="outlined" color="primary" id="login" component={Link} to={"/login"}>Entrar</Button>
                             <IconButton onClick={toggleDrawer("right", true)} id="mobile-button">
                                 <MenuIcon />
                             </IconButton>
@@ -55,8 +55,16 @@ export default class HeaderMenu extends Component<{}, any> {
                     anchor={"right"}
                     open={this.state.right}
                     onClose={toggleDrawer("right", false)}
+
                 >
-                    <List>
+                    <List >
+                        <ListItem>
+                            <ListItemButton component={Link} to={"/new-user"}>
+                                <ListItemText primary={"Cadastre-se"} />
+                            </ListItemButton>
+
+                        </ListItem>
+                        <Divider />
                         <ListItem>
                             <ListItemButton component={Link} to={"/login"}>
                                 <ListItemText primary={"Login"} />
