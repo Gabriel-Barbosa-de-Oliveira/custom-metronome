@@ -1,6 +1,5 @@
 import { IUser } from "../context/User.interface";
 
-export interface IAuthenticator {
-    cardState: "login" | "new-user";
+export interface ILoginScreenProps {
     onSignIn?: (user: IUser) => void;
 }

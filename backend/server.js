@@ -10,7 +10,7 @@ var _ = require('lodash');
 const server = jsonServer.create();
 
 const router = jsonServer.router("./db.json");
-// const userdb = JSON.parse(fs.readFileSync("./users.json", "UTF-8"));
+const users = JSON.parse(fs.readFileSync("./users.json", "UTF-8"));
 const userdb = jsonServer.router("./users.json");
 
 server.use(jsonServer.defaults());
@@ -27,7 +27,7 @@ server.use(
 );
 
 function findUser({ email, password }) {
-  return userdb.users.find(
+  return users.users.find(
     (user) => user.email === email && user.password === password
   );
 }
@@ -43,6 +43,7 @@ function createUser({ name, email, password }) {
 }
 
 server.post("/session/create-session", (req, res) => {
+  console.log(req.body)
   const { email, password } = req.body;
   const user = findUser({ email, password });
   if (!user) {
@@ -56,12 +57,6 @@ server.post("/session/create-session", (req, res) => {
   }
 });
 
-// server.post("/session/create-user", (req, res) => {
-//   const { name, email, password } = req.body;
-//   const user = createUser({ name, email, password });
-
-//   res.status(200).json(user);
-// });
 
 server.post('/session/create-user', (req, res) => {
   const db = userdb.db; // Assign the lowdb instance
@@ -92,8 +87,8 @@ server.post('/session/create-user', (req, res) => {
 });
 
 server.get("/session/user", (req, res) => {
-  if (req.session.user) {
-    res.status(200).json(req.session.user);
+  if (req.session) {
+    res.status(200).json(req.session);
   } else {
     res.status(401).json({ status: 401, message: "Não autenticado" });
   }
