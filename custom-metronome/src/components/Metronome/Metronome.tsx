@@ -12,6 +12,7 @@ import { IPulseControllerControlObject } from '../../shared/interfaces/props/IPu
 import _ from 'lodash';
 import Footer from '../../partials/Footer/Footer';
 import Playlist from '../Playlist/Playlist';
+import { IUser } from '../../shared/interfaces/context/User.interface';
 
 type IMetronomeState = {
     isPlaying: boolean,
@@ -23,7 +24,7 @@ type IMetronomeState = {
     currentPulses: Array<IPulseControllerControlObject>;
 };
 
-export default class Metronome extends Component<{}, IMetronomeState> {
+export default class Metronome extends Component<{user: IUser | null}, IMetronomeState> {
 
     private click1: Howl = new Howl({
         src: require('./click2.mp3')
@@ -47,6 +48,7 @@ export default class Metronome extends Component<{}, IMetronomeState> {
         this.metronomeInstance = new Timer(() => { this.handleMetronomeClick() }, 60000 / this.state.metronomeValue, { immediate: true });
         this.mapInitialPulses();
         Howler.volume(1)
+        console.log(props.user)
     }
 
     mapInitialPulses(initialState?: boolean) {
@@ -184,7 +186,7 @@ export default class Metronome extends Component<{}, IMetronomeState> {
 
         return (
             <>
-                <HeaderMenu />
+                <HeaderMenu user={this.props.user} />
                 <section className="container">
                     <section className="metronome">
                         <section>
@@ -229,7 +231,7 @@ export default class Metronome extends Component<{}, IMetronomeState> {
                             </div>
                             <div className='sub-text'>
                                 <p><span><b>Azul</b></span> = Nota com acentuação</p>
-                                <p><b>Cinza</b> = Nota sem acentuação</p>
+                                <p><span className='gray-text'>Cinza</span> = Nota sem acentuação</p>
                                 <p>Selecione a batida que gostaria de acentuar clickando no circulo abaixo dos bpms</p>
                             </div>
                         </section>

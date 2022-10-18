@@ -120,3 +120,8 @@
         padding: 16px;
     }
 }
+
+.gray-text {
+    color: rgba($color: #000000, $alpha: 0.6) !important;
+    font-weight: 400;
+}

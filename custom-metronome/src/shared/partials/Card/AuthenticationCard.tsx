@@ -13,7 +13,7 @@ export default class AuthenticationCard extends Component<IAuthenticator, any> {
 
     render() {
 
-        const login: JSX.Element = <Login />
+        const login: JSX.Element = <Login onSignIn={this.props.onSignIn}/>
 
         const newUser: JSX.Element = <NewUser />
 

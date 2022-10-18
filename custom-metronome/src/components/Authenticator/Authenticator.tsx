@@ -6,7 +6,7 @@ export default class Authenticator extends Component<IAuthenticator, any> {
   render() {
     return (
         <section className='authenticator-container'>
-            <AuthenticationCard cardState={this.props.cardState} />
+            <AuthenticationCard cardState={this.props.cardState}  onSignIn={this.props.onSignIn} />
         </section>
         
     )
