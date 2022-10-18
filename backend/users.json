@@ -20,6 +20,13 @@
       "email": "teste",
       "password": "teste",
       "playlists": []
+    },
+    {
+      "id": "14894ce0-ce03-481f-8150-907950a7441b",
+      "name": "teste",
+      "email": "teste",
+      "password": "teste",
+      "playlists": []
     }
   ]
 }
