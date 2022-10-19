@@ -52,7 +52,7 @@ server.post("/session/create-session", (req, res) => {
       .status(status)
       .json({ status, message: "E-mail não encontrado ou password incorreta" });
   } else {
-    req.session.user = { name: user.name, email: user.email };
+    req.session.user = { name: user.name, email: user.email, id: user.id };
     res.status(200).json(req.session.user);
   }
 });
