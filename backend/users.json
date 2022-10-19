@@ -19,11 +19,46 @@
       "name": "teste",
       "email": "teste",
       "password": "teste",
-      "playlists": [{
+      "playlists": [
+        {
+          "id": "94923292-d7cc-4083-8760-4cad0bd912a8",
+          "name": "Abecedário Ritmico",
+          "compasses": [
+            {
+              "name": "a",
+              "measures": 4,
+              "positions": [
+                {
+                  "isActive": true,
+                  "position": 0,
+                  "id": "0"
+                },
+                {
+                  "isActive": false,
+                  "position": 1,
+                  "id": "1"
+                },
+                {
+                  "isActive": false,
+                  "position": 2,
+                  "id": "2"
+                },
+                {
+                  "isActive": false,
+                  "position": 2,
+                  "id": "2"
+                }
+              ]
+            }
+          ],
+          "createdAt": "19/10/2022"
+        },        
+        {
         "id": "c33ae3ee-6197-4a31-b58a-cd54a2694e01",
         "name": "Playlist",
         "compasses": [
           {
+            "name": "a",
             "measures": 4,
             "positions": [
               {
@@ -49,6 +84,7 @@
             ]
           },
           {
+            "name": "b",
             "measures": 4,
             "positions": [
               {
@@ -75,9 +111,6 @@
           }
         ],
         "createdAt": "18/10/2022"
-
-
-
       }]
     },
     {
