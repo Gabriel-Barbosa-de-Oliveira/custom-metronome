@@ -18,7 +18,8 @@ import { useNavigate } from 'react-router-dom';
 
 export interface SimpleDialogProps {
   open: boolean;
-  onClose: () => void;
+  inputData?: any;
+  onClose: (action?: string) => void;
 }
 
 export function SimpleDialog(props: SimpleDialogProps) {

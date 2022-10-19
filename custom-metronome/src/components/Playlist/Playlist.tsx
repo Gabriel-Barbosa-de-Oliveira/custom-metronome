@@ -7,13 +7,14 @@ import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import { Delete, Edit, PlayArrow } from '@mui/icons-material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { SimpleDialog } from '../../partials/Dialog/SimpleDialog';
+import { SimpleDialog } from '../../partials/LoginDialog/LoginDialog';
 import { Button, IconButton, ListItemButton, ThemeProvider } from '@mui/material';
 import newTheme from '../../shared/services/button-color-creator.service';
 import { useNavigate } from 'react-router-dom';
 import { BackendService } from '../../services/backend/BackendService';
 import { ToastrService } from '../../shared/services/Toastr.service';
 import { findIndex } from 'lodash';
+import AlertDialog from '../../partials/AlertDialog/AlertDialog';
 export default function Playlist() {
 
     const openControl: boolean = false;
@@ -21,6 +22,8 @@ export default function Playlist() {
     const playlistsControl: Array<any> = [];
 
     const [open, setOpen] = useState<boolean>(openControl);
+    const [openAlert, setOpenAlert] = useState<boolean>(openControl);
+    const [inputData, setInputData] = useState<any>(null);
     const [user, setUser] = useState<any>(userControl);
     const [playlists, setPlaylists] = useState<any>(playlistsControl);
     const [listItems, setListItems] = useState<any>([]);
@@ -52,6 +55,19 @@ export default function Playlist() {
         setOpen(open);
     }
 
+    function openAlertDialog(listId: string) {
+        setInputData(listId);
+        setOpenAlert(true);
+    }
+
+    function handleAlertClose(action?: string){
+        console.log(action)
+        if(action){
+            deleteListItem()
+        }
+        setOpenAlert(false);
+    }
+
 
     function handleClick() {
         if (!user) {
@@ -65,10 +81,11 @@ export default function Playlist() {
         return sessionStorage.getItem("user") || "";
     }
 
-    function deleteListItem(listId: string){
+    function deleteListItem(){
         const newPlaylists: Array<any> = playlists;
-        const index = newPlaylists.findIndex((listItem: any) => listItem.id === listId);
+        const index = newPlaylists.findIndex((listItem: any) => listItem.id === inputData);
         newPlaylists.splice(index, 1);
+        setInputData(null);
         setPlaylists(newPlaylists);
         renderPlaylists();
     }
@@ -90,7 +107,7 @@ export default function Playlist() {
                             </ListItemButton>
 
                             <ListItemIcon>
-                                <IconButton aria-label="delete playlist" component="label" onClick={() => deleteListItem(element.id)}>
+                                <IconButton aria-label="delete playlist" component="label" onClick={() => openAlertDialog(element.id)}>
                                     <Delete />
                                 </IconButton>
                             </ListItemIcon>
@@ -132,7 +149,12 @@ export default function Playlist() {
 
                 <SimpleDialog
                     open={open}
-                    onClose={() => handleOpen(false)} />
+                    onClose={(id?: string) => handleOpen(false)} />
+                <AlertDialog  
+                    open={openAlert}
+                    inputData={inputData}
+                    onClose={handleAlertClose} /> 
+
             </Box></>
     )
 
