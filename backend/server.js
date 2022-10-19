@@ -31,6 +31,11 @@ function findUser({ email, password }) {
     (user) => user.email === email && user.password === password
   );
 }
+function findUserPlaylists(userId) {
+  return users.users.find(
+    (user) => user.id === userId
+  );
+}
 
 function createUser({ name, email, password }) {
   return {
@@ -56,6 +61,19 @@ server.post("/session/create-session", (req, res) => {
     res.status(200).json(req.session.user);
   }
 });
+
+server.post("/playlists", (req, res) => {
+  const {userId} = req.body;
+  const playlists = findUserPlaylists(userId);
+  if (!playlists) {
+    const status = 404;
+    res
+      .status(status)
+      .json({ status, message: "Usuário não possui playlists" });
+  } else {
+    res.status(200).json(playlists.playlists);
+  }
+})
 
 
 server.post('/session/create-user', (req, res) => {
@@ -93,6 +111,8 @@ server.get("/session/user", (req, res) => {
     res.status(401).json({ status: 401, message: "Não autenticado" });
   }
 });
+
+
 
 server.get("/health", (req, res) => {
   res.status(200).json({ up: true }); 

@@ -19,7 +19,66 @@
       "name": "teste",
       "email": "teste",
       "password": "teste",
-      "playlists": []
+      "playlists": [{
+        "id": "c33ae3ee-6197-4a31-b58a-cd54a2694e01",
+        "name": "Playlist",
+        "compasses": [
+          {
+            "measures": 4,
+            "positions": [
+              {
+                "isActive": true,
+                "position": 0,
+                "id": "0"
+              },
+              {
+                "isActive": false,
+                "position": 1,
+                "id": "1"
+              },
+              {
+                "isActive": false,
+                "position": 2,
+                "id": "2"
+              },
+              {
+                "isActive": false,
+                "position": 2,
+                "id": "2"
+              }
+            ]
+          },
+          {
+            "measures": 4,
+            "positions": [
+              {
+                "isActive": false,
+                "position": 0,
+                "id": "0"
+              },
+              {
+                "isActive": true,
+                "position": 1,
+                "id": "1"
+              },
+              {
+                "isActive": false,
+                "position": 2,
+                "id": "2"
+              },
+              {
+                "isActive": false,
+                "position": 2,
+                "id": "2"
+              }
+            ]
+          }
+        ],
+        "createdAt": "18/10/2022"
+
+
+
+      }]
     },
     {
       "id": "14894ce0-ce03-481f-8150-907950a7441b",
