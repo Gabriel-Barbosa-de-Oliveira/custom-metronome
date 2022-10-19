@@ -41,11 +41,9 @@ export default class HeaderMenu extends Component<{ user?: IUser | null }, any> 
 
     componentDidMount(): void {
         const sessionUser = this.checkUserFromSessionStorage();
-        if (!this.props.user && sessionUser) {
-            this.setState({
-                user: sessionUser
-            })
-        }
+        this.setState({
+            user: sessionUser
+        })
     }
 
     checkUserFromSessionStorage() {
@@ -53,17 +51,17 @@ export default class HeaderMenu extends Component<{ user?: IUser | null }, any> 
         return user ? JSON.parse(user) : null;
     }
 
-    componentWillReceiveProps(nextProps: Readonly<{ user: IUser | null; }>): void {
-        this.setState({ user: nextProps.user });
-    }
+    // componentWillReceiveProps(nextProps: Readonly<{ user: IUser | null; }>): void {
+    //     console.log(nextProps)
+    //     this.setState({ user: nextProps.user });
+    // }
 
-    logOut() {
+    async logOut() {
         // signOutEndpoint();
         try {
-            // await new BackendService().create("/session/logout", this.state.user);
-            // this.state.signOut();
-            this.setState({user: null})
+            await new BackendService().create("/session/logout", this.state.user);
             sessionStorage.removeItem("user")
+            this.setState({ user: null })
             new ToastrService().notifySuccess("Usuário deslogado com sucesso");
         } catch {
             new ToastrService().notifyError("Erro ao deslogar o usuário !");
@@ -105,7 +103,7 @@ export default class HeaderMenu extends Component<{ user?: IUser | null }, any> 
                                         aria-expanded={this.state.open ? 'true' : undefined}
                                         onClick={this.handleClick}
                                         startIcon={<AccountCircleIcon />}>
-                                        {this.state.user?.name}
+                                        {this.state.user.name}
                                     </Button>
                             }
                             <Menu

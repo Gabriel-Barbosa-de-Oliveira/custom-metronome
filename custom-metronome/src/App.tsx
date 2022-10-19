@@ -27,7 +27,6 @@ function App() {
 
   useEffect(() => {
     try {
-      console.log(user)
       const data = (getUser() as any);
       if (data) {
         setUser(data)
