@@ -48,7 +48,6 @@ export default class Metronome extends Component<{user: IUser | null}, IMetronom
         this.metronomeInstance = new Timer(() => { this.handleMetronomeClick() }, 60000 / this.state.metronomeValue, { immediate: true });
         this.mapInitialPulses();
         Howler.volume(1)
-        console.log(props.user)
     }
 
     mapInitialPulses(initialState?: boolean) {

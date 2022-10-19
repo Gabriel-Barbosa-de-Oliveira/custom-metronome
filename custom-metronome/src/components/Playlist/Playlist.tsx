@@ -13,6 +13,7 @@ import newTheme from '../../shared/services/button-color-creator.service';
 import { useNavigate } from 'react-router-dom';
 import { BackendService } from '../../services/backend/BackendService';
 import { ToastrService } from '../../shared/services/Toastr.service';
+import { findIndex } from 'lodash';
 export default function Playlist() {
 
     const openControl: boolean = false;
@@ -22,6 +23,7 @@ export default function Playlist() {
     const [open, setOpen] = useState<boolean>(openControl);
     const [user, setUser] = useState<any>(userControl);
     const [playlists, setPlaylists] = useState<any>(playlistsControl);
+    const [listItems, setListItems] = useState<any>([]);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -31,6 +33,10 @@ export default function Playlist() {
             getPlaylists(loggedUser.id);
         }
     }, [])
+
+    useEffect(() => {
+        renderPlaylists();
+    }, [playlists])
 
     async function getPlaylists(userId: string) {
         try {
@@ -59,12 +65,20 @@ export default function Playlist() {
         return sessionStorage.getItem("user") || "";
     }
 
+    function deleteListItem(listId: string){
+        const newPlaylists: Array<any> = playlists;
+        const index = newPlaylists.findIndex((listItem: any) => listItem.id === listId);
+        newPlaylists.splice(index, 1);
+        setPlaylists(newPlaylists);
+        renderPlaylists();
+    }
+
     function renderPlaylists() {
 
-        let listItems: Array<JSX.Element> = [];
+        let newListItems: Array<JSX.Element> = [];
 
         playlists.forEach((element: any) => {
-            listItems.push(
+            newListItems.push(
                 <div key={element.id} id={element.id}>
                     <ListItem>
                         <ThemeProvider theme={newTheme}>
@@ -76,7 +90,7 @@ export default function Playlist() {
                             </ListItemButton>
 
                             <ListItemIcon>
-                                <IconButton aria-label="delete playlist" component="label">
+                                <IconButton aria-label="delete playlist" component="label" onClick={() => deleteListItem(element.id)}>
                                     <Delete />
                                 </IconButton>
                             </ListItemIcon>
@@ -92,7 +106,7 @@ export default function Playlist() {
             )
         });
 
-        return listItems;
+        setListItems(newListItems);
 
     }
 
@@ -102,7 +116,7 @@ export default function Playlist() {
             <Box sx={{ width: '100%', maxWidth: "100%", bgcolor: 'background.paper', color: "#000", marginTop: 5 }}>
                 <nav aria-label="main mailbox folders">
                     <List>
-                        {renderPlaylists()}
+                        {listItems}
                         <ListItem>
                             <ThemeProvider theme={newTheme}>
                                 <Button variant='text' color='neutral' onClick={handleClick}>
