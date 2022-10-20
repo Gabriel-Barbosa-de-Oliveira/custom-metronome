@@ -19,7 +19,7 @@ import { IUser } from './shared/interfaces/context/User.interface';
 import { BackendService } from './services/backend/BackendService';
 import Footer from './partials/Footer/Footer';
 import { useLocation } from 'react-router-dom'
-import Playlists from './components/Playlists/Playlists';
+import PlaylistForm from './components/Playlists/Playlists';
 import { ToastrService } from './shared/services/Toastr.service';
 
 function App() {
@@ -61,10 +61,10 @@ function App() {
           <Route path='/login' element={<Authenticator cardState='login' onSignIn={setUser} />} />
           <Route path='/new-user' element={<Authenticator cardState='new-user' />} />
           <Route
-            path="/playlists"
+            path="/new-playlist"
             element={
               <RequireAuth>
-                <Playlists />
+                <PlaylistForm />
               </RequireAuth>
             }
           />

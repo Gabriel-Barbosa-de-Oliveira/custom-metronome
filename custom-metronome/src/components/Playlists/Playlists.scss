@@ -1,6 +1,19 @@
 .playlists-container { 
     margin-top: 100px;
+    display: flex;
+    justify-content: center;
+    padding: 64px;
+    width: 100%;
+}
+
+.form-container {
+    text-align: left;
+    width: 60%;
+}
+
+.compass-container{
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    justify-items: center;
+    grid-gap: 16px;
+    align-items: baseline;
 }
