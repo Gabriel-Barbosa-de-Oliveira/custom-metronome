@@ -79,8 +79,8 @@ export default class Metronome extends Component<{ user: IUser | null }, IMetron
                 datasets: [{
                     fill: false,
                     label: 'Velocidades Utilizadas',
-                    backgroundColor: 'rgb(0, 0, 0)',
-                    borderColor: 'rgb(0, 0, 0)',
+                    backgroundColor: '#1976d2',
+                    borderColor: '#1976d2',
                     data: [0],
                 }]
             }
