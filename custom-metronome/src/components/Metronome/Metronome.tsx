@@ -14,6 +14,18 @@ import Footer from '../../partials/Footer/Footer';
 import Playlist from '../Playlist/Playlist';
 import { IUser } from '../../shared/interfaces/context/User.interface';
 import { BackendService } from '../../services/backend/BackendService';
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Filler,
+    Legend,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
 
 type IMetronomeState = {
     isPlaying: boolean,
@@ -24,11 +36,23 @@ type IMetronomeState = {
     currentPlayStatusText: string,
     currentPulses: Array<IPulseControllerControlObject>;
     lastVelocityUsed: number,
-    velocities: Array<number>
+    velocities: Array<number>,
+    chartData: any
 };
 
-export default class Metronome extends Component<{ user: IUser | null }, IMetronomeState> {
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Filler,
+    Legend
+);
 
+export default class Metronome extends Component<{ user: IUser | null }, IMetronomeState> {
+    private documentCanvas: any;
     private click1: Howl = new Howl({
         src: require('./click2.mp3')
     });
@@ -49,13 +73,27 @@ export default class Metronome extends Component<{ user: IUser | null }, IMetron
             currentPlayStatusText: "Play",
             currentPulses: [],
             lastVelocityUsed: 0,
-            velocities: []
+            velocities: [0],
+            chartData: {
+                labels: [""],
+                datasets: [{
+                    fill: false,
+                    label: 'Velocidades Utilizadas',
+                    backgroundColor: 'rgb(0, 0, 0)',
+                    borderColor: 'rgb(0, 0, 0)',
+                    data: [0],
+                }]
+            }
         };
         this.metronomeInstance = new Timer(() => { this.handleMetronomeClick() }, 60000 / this.state.metronomeValue, { immediate: true });
         this.backendService = new BackendService();
         this.mapInitialPulses();
         Howler.volume(1)
-        if (this.props.user) 
+    }
+
+    componentDidMount(): void {
+        this.documentCanvas = document.getElementById('myChart');
+        if (this.props.user)
             this.getUserData();
     }
 
@@ -123,6 +161,7 @@ export default class Metronome extends Component<{ user: IUser | null }, IMetron
             this.metronomeInstance.start();
             this.mapNewLastVelocity();
             this.addNewVelocity();
+            this.generateNewGraph();
             this.setState({
                 currentPlayStatusText: "Stop",
                 currentPlayStatusComponent: <StopCircleOutlinedIcon />
@@ -196,26 +235,49 @@ export default class Metronome extends Component<{ user: IUser | null }, IMetron
 
     async getUserData() {
         try {
-            const data =  await this.backendService.create("/user-data", { userId: this.mapUser().id })
-            console.log(data)
-            this.setState( {
+            const data = await this.backendService.create("/user-data", { userId: this.mapUser().id })
+            const newChartData = this.state.chartData;
+            newChartData.labels = data.velocities.map(() => { return "" });
+            newChartData.datasets[0].data = data.velocities;
+            const datasetsCopy = this.state.chartData.datasets.slice(0);
+            console.log(newChartData)
+
+            this.setState({
                 velocities: data.velocities,
-                lastVelocityUsed: data.lastVelocityUsed
+                lastVelocityUsed: data.lastVelocityUsed,
+                chartData: Object.assign(newChartData, this.state.chartData, {
+                    datasets: datasetsCopy
+                })
             })
-        } catch { 
+        } catch {
 
         }
     }
 
     mapNewLastVelocity() {
-        this.setState({lastVelocityUsed: this.state.metronomeValue})
+        this.setState({ lastVelocityUsed: this.state.metronomeValue })
     }
- 
+
     addNewVelocity() {
         const newVelocities = this.state.velocities;
         newVelocities.push(this.state.metronomeValue);
-        this.setState({velocities: newVelocities})
+        this.setState({ velocities: newVelocities })
     }
+
+    generateNewGraph() {
+        const newChartData = this.state.chartData;
+        const {velocities } = this.state;
+        newChartData.labels = velocities.map(() => { return "" });
+        newChartData.datasets[0].data = velocities;
+        const datasetsCopy = this.state.chartData.datasets.slice(0);
+
+        this.setState({
+            chartData: Object.assign(newChartData, this.state.chartData, {
+                datasets: datasetsCopy
+            })
+        })
+    }
+
 
     render() {
 
@@ -293,11 +355,11 @@ export default class Metronome extends Component<{ user: IUser | null }, IMetron
                                     </CardContent>
                                 </Card>
                                 <Card variant="outlined" id="graph">
-                                    <CardHeader title={"Evolução"} />
+                                    {/* <CardHeader title={"Evolução"} /> */}
                                     <CardContent sx={{ flex: '1 0 auto' }}>
-                                        <Typography color="text.secondary" component="div" variant="h5">
-                                            {metronomeValue}
-                                        </Typography>
+                                        {/* <canvas id="myChart"></canvas> */}
+                                        <Line data={this.state.chartData} />
+
                                     </CardContent>
                                 </Card>
                                 {/* <Playlist /> */}
