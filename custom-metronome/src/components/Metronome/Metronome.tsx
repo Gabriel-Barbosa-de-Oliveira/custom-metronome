@@ -1,4 +1,4 @@
-import { Button, Slider } from '@mui/material';
+import { Button, Card, CardContent, CardHeader, Slider, Typography } from '@mui/material';
 import { Component } from 'react';
 import NumberController from '../../shared/partials/NumberController/NumberController';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
@@ -13,6 +13,7 @@ import _ from 'lodash';
 import Footer from '../../partials/Footer/Footer';
 import Playlist from '../Playlist/Playlist';
 import { IUser } from '../../shared/interfaces/context/User.interface';
+import { BackendService } from '../../services/backend/BackendService';
 
 type IMetronomeState = {
     isPlaying: boolean,
@@ -22,9 +23,11 @@ type IMetronomeState = {
     currentPlayStatusComponent: JSX.Element,
     currentPlayStatusText: string,
     currentPulses: Array<IPulseControllerControlObject>;
+    lastVelocityUsed: number,
+    velocities: Array<number>
 };
 
-export default class Metronome extends Component<{user: IUser | null}, IMetronomeState> {
+export default class Metronome extends Component<{ user: IUser | null }, IMetronomeState> {
 
     private click1: Howl = new Howl({
         src: require('./click2.mp3')
@@ -34,6 +37,7 @@ export default class Metronome extends Component<{user: IUser | null}, IMetronom
     });
 
     metronomeInstance: any;
+    backendService: BackendService;
     constructor(props: any) {
         super(props);
         this.state = {
@@ -43,11 +47,20 @@ export default class Metronome extends Component<{user: IUser | null}, IMetronom
             beatsNumber: 4,
             currentPlayStatusComponent: <PlayCircleOutlineIcon />,
             currentPlayStatusText: "Play",
-            currentPulses: []
+            currentPulses: [],
+            lastVelocityUsed: 0,
+            velocities: []
         };
         this.metronomeInstance = new Timer(() => { this.handleMetronomeClick() }, 60000 / this.state.metronomeValue, { immediate: true });
+        this.backendService = new BackendService();
         this.mapInitialPulses();
         Howler.volume(1)
+        if (this.props.user) 
+            this.getUserData();
+    }
+
+    mapUser() {
+        return JSON.parse(sessionStorage.getItem("user") || "{}");
     }
 
     mapInitialPulses(initialState?: boolean) {
@@ -179,6 +192,19 @@ export default class Metronome extends Component<{user: IUser | null}, IMetronom
         this.setState({ currentPulses: newPulses, count: 0 })
     }
 
+    async getUserData() {
+        try {
+            const data =  await this.backendService.create("/user-data", { userId: this.mapUser().id })
+            console.log(data)
+            this.setState( {
+                velocities: data.velocities,
+                lastVelocityUsed: data.lastVelocityUsed
+            })
+        } catch { 
+
+        }
+    }
+
     render() {
 
         const { metronomeValue, beatsNumber, currentPlayStatusComponent, currentPlayStatusText } = this.state;
@@ -235,8 +261,35 @@ export default class Metronome extends Component<{user: IUser | null}, IMetronom
                             </div>
                         </section>
 
-                        <section className='application-mode'>
-                            <Playlist />
+                        <section className='application-data'>
+                            {/* <h3>Dados do Usuário</h3> */}
+                            <section className='application-mode'>
+                                <Card variant="outlined">
+                                    <CardHeader title={"Última execução"} />
+                                    <CardContent sx={{ flex: '1 0 auto' }}>
+                                        <Typography color="text.secondary" component="div" variant="h5">
+                                            {this.state.lastVelocityUsed} bpms
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                                <Card variant="outlined">
+                                    <CardHeader title={"Maior velocidade atingida"} />
+                                    <CardContent sx={{ flex: '1 0 auto' }}>
+                                        <Typography color="text.secondary" component="div" variant="h5">
+                                            {Math.max(...this.state.velocities)} bpms
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                                <Card variant="outlined" id="graph">
+                                    <CardHeader title={"Evolução"} />
+                                    <CardContent sx={{ flex: '1 0 auto' }}>
+                                        <Typography color="text.secondary" component="div" variant="h5">
+                                            {metronomeValue}
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                                {/* <Playlist /> */}
+                            </section>
                         </section>
                     </section>
 

@@ -10,7 +10,9 @@
 
 .metronome {
     display: grid;
-    grid-template-columns: 30% 70%;
+    grid-template-columns: repeat(2, 1fr);
+    justify-items: center;
+    align-items: start;
     height: calc(100% - 200px)
 }
 
@@ -98,9 +100,27 @@
     }
 }
 
+.application-data{
+    width: 100%;
+    header {
+        padding: 32px 0;
+        height: auto;
+    }
+}
+
 .application-mode {
     text-align: center;
-    width: 100%;
+    width: 90%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-areas: "a b"
+                         "c c";
+    grid-gap: 16px;
+
+}
+
+#graph{
+    grid-area: c;
 }
 
 .pulse-controller-container {
