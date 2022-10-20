@@ -122,6 +122,7 @@ export default class Metronome extends Component<{ user: IUser | null }, IMetron
         } else {
             this.metronomeInstance.start();
             this.mapNewLastVelocity();
+            this.addNewVelocity();
             this.setState({
                 currentPlayStatusText: "Stop",
                 currentPlayStatusComponent: <StopCircleOutlinedIcon />
@@ -208,6 +209,12 @@ export default class Metronome extends Component<{ user: IUser | null }, IMetron
 
     mapNewLastVelocity() {
         this.setState({lastVelocityUsed: this.state.metronomeValue})
+    }
+ 
+    addNewVelocity() {
+        const newVelocities = this.state.velocities;
+        newVelocities.push(this.state.metronomeValue);
+        this.setState({velocities: newVelocities})
     }
 
     render() {
