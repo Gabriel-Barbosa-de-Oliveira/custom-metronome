@@ -19,6 +19,11 @@ export class BackendService {
         return data;
     }
 
+    async update(url: string, body: any) {
+        const { data } = await this.axiosInstance.put(url, body);
+        return data;
+    }
+
     // async signInEndpoint(
     //     email: string,
     //     password: string

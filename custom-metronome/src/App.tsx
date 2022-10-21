@@ -27,8 +27,8 @@ function App() {
 
   useEffect(() => {
     try {
-      if (user) {
-        const authenticatedUser = (authenticateUser() as any).user;
+      const {authenticatedUser} = (authenticateUser() as any);
+      if (authenticatedUser) {
         setUser(authenticatedUser)
         sessionStorage.setItem("user", JSON.stringify(authenticatedUser));
       }

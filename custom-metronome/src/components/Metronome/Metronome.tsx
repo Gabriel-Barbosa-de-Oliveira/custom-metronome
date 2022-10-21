@@ -26,6 +26,7 @@ import {
     Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+import { ToastrService } from '../../shared/services/Toastr.service';
 
 type IMetronomeState = {
     isPlaying: boolean,
@@ -37,7 +38,8 @@ type IMetronomeState = {
     currentPulses: Array<IPulseControllerControlObject>;
     lastVelocityUsed: number,
     velocities: Array<number>,
-    chartData: any
+    chartData: any,
+    dataId: any
 };
 
 ChartJS.register(
@@ -74,6 +76,7 @@ export default class Metronome extends Component<{ user: IUser | null }, IMetron
             currentPulses: [],
             lastVelocityUsed: 0,
             velocities: [0],
+            dataId: null,
             chartData: {
                 labels: [""],
                 datasets: [{
@@ -164,9 +167,12 @@ export default class Metronome extends Component<{ user: IUser | null }, IMetron
             })
         } else {
             this.metronomeInstance.start();
-            this.mapNewLastVelocity();
-            this.addNewVelocity();
-            this.generateNewGraph();
+            if (this.getUserSession()) {
+                this.putUserData();
+            } else {
+                this.mapUserData();
+            }
+
             this.setState({
                 currentPlayStatusText: "Stop",
                 currentPlayStatusComponent: <StopCircleOutlinedIcon />
@@ -240,8 +246,7 @@ export default class Metronome extends Component<{ user: IUser | null }, IMetron
 
     async getUserData() {
         try {
-            const data = await this.backendService.read(`/data?userId=${this.getUserSession().id}`)
-            console.log(data)
+            const data = await this.backendService.read(`/data?userId=${this.getUserSession().id}`);
             const newChartData = this.state.chartData;
             newChartData.labels = data[0].velocities.map(() => { return "" });
             newChartData.datasets[0].data = data[0].velocities;
@@ -249,6 +254,7 @@ export default class Metronome extends Component<{ user: IUser | null }, IMetron
             console.log(newChartData)
 
             this.setState({
+                dataId: data[0].id,
                 velocities: data[0].velocities,
                 lastVelocityUsed: data[0].lastVelocityUsed,
                 chartData: Object.assign(newChartData, this.state.chartData, {
@@ -258,6 +264,30 @@ export default class Metronome extends Component<{ user: IUser | null }, IMetron
         } catch {
 
         }
+    }
+
+    async putUserData() {
+
+        const userData = {
+            "userId": this.getUserSession().id,
+            "lastVelocityUsed": this.state.lastVelocityUsed,
+            "velocities": this.state.velocities
+        }
+
+        try {
+            const data = await this.backendService.update(`/data/${this.state.dataId}`, userData);
+            new ToastrService().notifySuccess("Dados salvos com sucesso");
+        } catch {
+            new ToastrService().notifySuccess("Erro ao salvar dados");
+        }
+
+        this.mapUserData();
+    }
+
+    mapUserData() {
+        this.mapNewLastVelocity();
+        this.addNewVelocity();
+        this.generateNewGraph();
     }
 
     mapNewLastVelocity() {
@@ -366,7 +396,7 @@ export default class Metronome extends Component<{ user: IUser | null }, IMetron
                                     {/* <CardHeader title={"Evolução"} /> */}
                                     <CardContent sx={{ flex: '1 0 auto', paddingBottom: 0 }}>
                                         {/* <canvas id="myChart"></canvas> */}
-                                        <Line data={this.state.chartData}/>
+                                        <Line data={this.state.chartData} />
                                     </CardContent>
                                     <div className='card-footer'>
                                         {this.getUserSession() ? "" : <small>Faça Login para salvar seu progresso definitvamente</small>}
