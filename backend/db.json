@@ -112,6 +112,12 @@
       "password": "$2a$10$JmOyV9x0q6AgOkV9C29mRerQTrWVB6KAGXaQvIPGv4Zztu5V1BRTG",
       "name": "teste",
       "id": "YHvhx6b"
+    },
+    {
+      "email": "testenovo@email.com",
+      "password": "$2a$10$8HtIHfEWQ/39EhVkoeWEbOW7kLAIaRlxtG7FSFnkBDUH.jx49gd2G",
+      "name": "Teste Novo",
+      "id": "vi4AvbH"
     }
   ],
   "data": [
@@ -152,6 +158,15 @@
         62
       ],
       "id": 3
+    },
+    {
+      "userId": "vi4AvbH",
+      "lastVelocityUsed": 79,
+      "velocities": [
+        60,
+        79
+      ],
+      "id": "ea3c728d-f82c-4c1e-8902-fa440a61efec"
     }
   ],
   "logout": {

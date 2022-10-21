@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { BackendService } from '../../services/backend/BackendService';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function NewUser() {
 
@@ -45,11 +46,28 @@ export default function NewUser() {
 
     async function postNewUser() {
         try {
-            await backendService.create("/register", { name, email, password });
-            notifySuccess("Usuário criado com sucesso !");
-            navigate("/login");
+            const data  = await backendService.create("/users", { name, email, password });
+            createNewUserData(data)
         } catch (error) {
             notifyError("Erro ao criar novo usuário !");
+        }
+    }
+
+    async function createNewUserData(data: any) {
+        try {
+            await backendService.create("/data", {
+                id: uuidv4(),
+                userId: data.user.id,
+                "lastVelocityUsed": 60,
+                "velocities": [
+                    60
+                ]
+            })
+
+            notifySuccess("Usuário criado com sucesso !");
+            navigate("/login");
+        } catch {
+            notifyError("Erro ao criar dados do usuário !");
         }
     }
 
