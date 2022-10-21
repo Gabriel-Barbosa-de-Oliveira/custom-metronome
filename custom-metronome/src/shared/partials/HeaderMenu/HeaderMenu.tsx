@@ -40,10 +40,14 @@ export default function HeaderMenu() {
     };
 
     function handleClose() {
-        console.log("chamou")
         logOut();
  
     };
+
+    function handleMenuClose(){
+        setAnchorEl(null);
+        setOpen(false);
+    }
 
 
     function checkUserFromSessionStorage() {
@@ -52,22 +56,18 @@ export default function HeaderMenu() {
     }
 
     async function logOut() {
-        // signOutEndpoint();
         try {
-            await new BackendService().create("/session/logout", user);
+            await new BackendService().read("/logout", user);
             setAnchorEl(null);
             setOpen(false);
-            sessionStorage.removeItem("user")
             setUser(null);
+            sessionStorage.removeItem("user")
             new ToastrService().notifySuccess("Usuário deslogado com sucesso");
             navigate("/");
         } catch {
             new ToastrService().notifyError("Erro ao deslogar o usuário !");
         }
     }
-
-
-
 
     const imgUrl: string = require("../../../assets/img/logo-black.png");
 
@@ -108,7 +108,7 @@ export default function HeaderMenu() {
                             id="basic-menu"
                             anchorEl={anchorEl}
                             open={open}
-                            onClose={() => handleClose}
+                            onClose={handleMenuClose}
                             MenuListProps={{
                                 'aria-labelledby': 'basic-button',
                             }}

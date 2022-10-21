@@ -1,16 +1,23 @@
 {
-    "data": [
-        {
-            "userId": "b496212d-022d-4136-b186-0df356310626",
-            "lastVelocityUsed": 60,
-            "velocities": [
-                60,
-                70,
-                80,
-                65,
-                70,
-                100
-            ]
-        }
-    ]
+  "data": [
+    {
+      "userId": "b496212d-022d-4136-b186-0df356310626",
+      "lastVelocityUsed": 60,
+      "velocities": [
+        60,
+        70,
+        80,
+        65,
+        70,
+        100
+      ]
+    },
+    {
+      "userId": "2f426e3a-0d7c-4902-84df-3608662a3748",
+      "lastVelocityUsed": 60,
+      "velocities": [
+        60
+      ]
+    }
+  ]
 }

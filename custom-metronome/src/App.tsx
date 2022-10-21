@@ -27,9 +27,10 @@ function App() {
 
   useEffect(() => {
     try {
-      const data = (getUser() as any);
-      if (data) {
-        setUser(data)
+      const {authenticatedUser} = (authenticateUser() as any);
+      if (authenticatedUser) {
+        setUser(authenticatedUser)
+        sessionStorage.setItem("user", JSON.stringify(authenticatedUser));
       }
     } catch {
       onSignOut();
@@ -41,8 +42,8 @@ function App() {
     return user ? JSON.parse(user) : null;
   }
 
-  async function getUser() {
-    return await new BackendService().read("/session/user", user);
+  async function authenticateUser() {
+    return await new BackendService().create("/login", user);
   }
 
   function onSignOut() {

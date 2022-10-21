@@ -115,7 +115,7 @@
     grid-template-columns: repeat(2, 1fr);
     grid-template-areas: "a b"
                          "c c";
-    grid-gap: 16px;
+    grid-gap: 5px;
 
 }
 
@@ -149,6 +149,10 @@
                              "b"
                              "c";
     }
+}
+
+.card-footer{
+    padding-bottom: 10px;
 }
 
 .gray-text {

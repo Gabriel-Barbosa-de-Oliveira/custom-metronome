@@ -43,14 +43,29 @@ function findUserData(userId) {
     (user) => user.userId === userId
   );
 }
+function findUserDataIndex(userId) {
+  return userdata.data.findIndex(
+    (user) => user.userId === userId
+  );
+}
 
 function createUser({ name, email, password }) {
   return {
-    "id": randomUUID(),
+    "userId": randomUUID(),
     "name": name,
     "email": email,
     "password": password,
     "playlists": []
+  }
+}
+
+function createUserData(id) {
+  return {
+    "id": id,
+    "lastVelocityUsed": 60,
+    "velocities": [
+      60
+    ]
   }
 }
 
@@ -70,7 +85,7 @@ server.post("/session/create-session", (req, res) => {
 });
 
 server.post("/playlists", (req, res) => {
-  const {userId} = req.body;
+  const { userId } = req.body;
   const playlists = findUserPlaylists(userId);
   if (!playlists) {
     const status = 404;
@@ -83,7 +98,7 @@ server.post("/playlists", (req, res) => {
 })
 
 server.post("/user-data", (req, res) => {
-  const {userId} = req.body;
+  const { userId } = req.body;
   const playlists = findUserData(userId);
   if (!playlists) {
     const status = 404;
@@ -98,15 +113,11 @@ server.post("/user-data", (req, res) => {
 
 server.post('/session/create-user', (req, res) => {
   const db = userdb.db; // Assign the lowdb instance
+  const userdataDb = userdatadb.db; // Assign the lowdb instance
+  const newUser = createUser(req.body)
+  insert(db, 'users', newUser);
+  insert(userdataDb, 'data', createUserData(newUser.id));
 
-  if (Array.isArray(req.body)) {
-    req.body.forEach(element => {
-      insert(db, 'users', element); // Add a post
-    });
-  }
-  else {
-    insert(db, 'users', createUser(req.body)); // Add a post
-  }
   res.sendStatus(200)
 
   /**
@@ -124,6 +135,37 @@ server.post('/session/create-user', (req, res) => {
   }
 });
 
+server.put('/user-data', (req, res) => {
+  const db = userdb.db; // Assign the lowdb instance
+  const userdataDb = userdatadb.db; // Assign the lowdb instance
+  const newUser = createUser(req.body)
+  edit(userdataDb, 'data', req.body);
+
+  res.sendStatus(200)
+
+  /**
+   * Checks whether the id of the new data already exists in the DB
+   * @param {*} db - DB object
+   * @param {String} collection - Name of the array / collection in the DB / JSON file
+   * @param {*} data - New record
+   */
+  function edit(db, collection, data) {
+    const table = db.get(collection);
+    console.log(data)
+    const index = findUserDataIndex(data.userId)
+    console.log(index)
+    console.log(table.find(data.id).value(), "id")
+    
+    if (index === -1) {
+      res.status(400)
+      .json({ status: 404, message: "Id não pertence a esse usuário" });
+    }else{
+      table[index] = data;
+      
+    }
+  }
+});
+
 server.get("/session/user", (req, res) => {
   if (req.session) {
     res.status(200).json(req.session);
@@ -135,7 +177,7 @@ server.get("/session/user", (req, res) => {
 
 
 server.get("/health", (req, res) => {
-  res.status(200).json({ up: true }); 
+  res.status(200).json({ up: true });
 });
 
 server.post("/session/logout", (req, res) => {

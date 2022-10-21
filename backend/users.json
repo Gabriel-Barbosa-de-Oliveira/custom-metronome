@@ -1,20 +1,6 @@
 {
   "users": [
     {
-      "id": "fa83705d-85b6-4ce7-ad30-b70b51ad7a2a",
-      "name": "novo usuario",
-      "email": "novouser@emai.com",
-      "password": "123",
-      "playlists": []
-    },
-    {
-      "id": "cd5f927c-6e96-4cb3-a683-2c7f48c51965",
-      "name": "Gabriel Barbosa",
-      "email": "gabrielbarbosaprofissional@gmail.com",
-      "password": "12345",
-      "playlists": []
-    },
-    {
       "id": "b496212d-022d-4136-b186-0df356310626",
       "name": "teste",
       "email": "teste",
@@ -52,72 +38,73 @@
             }
           ],
           "createdAt": "19/10/2022"
-        },        
+        },
         {
-        "id": "c33ae3ee-6197-4a31-b58a-cd54a2694e01",
-        "name": "Playlist",
-        "compasses": [
-          {
-            "name": "a",
-            "measures": 4,
-            "positions": [
-              {
-                "isActive": true,
-                "position": 0,
-                "id": "0"
-              },
-              {
-                "isActive": false,
-                "position": 1,
-                "id": "1"
-              },
-              {
-                "isActive": false,
-                "position": 2,
-                "id": "2"
-              },
-              {
-                "isActive": false,
-                "position": 2,
-                "id": "2"
-              }
-            ]
-          },
-          {
-            "name": "b",
-            "measures": 4,
-            "positions": [
-              {
-                "isActive": false,
-                "position": 0,
-                "id": "0"
-              },
-              {
-                "isActive": true,
-                "position": 1,
-                "id": "1"
-              },
-              {
-                "isActive": false,
-                "position": 2,
-                "id": "2"
-              },
-              {
-                "isActive": false,
-                "position": 2,
-                "id": "2"
-              }
-            ]
-          }
-        ],
-        "createdAt": "18/10/2022"
-      }]
+          "id": "c33ae3ee-6197-4a31-b58a-cd54a2694e01",
+          "name": "Playlist",
+          "compasses": [
+            {
+              "name": "a",
+              "measures": 4,
+              "positions": [
+                {
+                  "isActive": true,
+                  "position": 0,
+                  "id": "0"
+                },
+                {
+                  "isActive": false,
+                  "position": 1,
+                  "id": "1"
+                },
+                {
+                  "isActive": false,
+                  "position": 2,
+                  "id": "2"
+                },
+                {
+                  "isActive": false,
+                  "position": 2,
+                  "id": "2"
+                }
+              ]
+            },
+            {
+              "name": "b",
+              "measures": 4,
+              "positions": [
+                {
+                  "isActive": false,
+                  "position": 0,
+                  "id": "0"
+                },
+                {
+                  "isActive": true,
+                  "position": 1,
+                  "id": "1"
+                },
+                {
+                  "isActive": false,
+                  "position": 2,
+                  "id": "2"
+                },
+                {
+                  "isActive": false,
+                  "position": 2,
+                  "id": "2"
+                }
+              ]
+            }
+          ],
+          "createdAt": "18/10/2022"
+        }
+      ]
     },
     {
-      "id": "14894ce0-ce03-481f-8150-907950a7441b",
-      "name": "teste",
-      "email": "teste",
-      "password": "teste",
+      "id": "2f426e3a-0d7c-4902-84df-3608662a3748",
+      "name": "Gabriel Barbosa",
+      "email": "gabrielbarbosaprofissional@gmail.com",
+      "password": "12345",
       "playlists": []
     }
   ]
