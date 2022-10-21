@@ -11,7 +11,9 @@ const server = jsonServer.create();
 
 const router = jsonServer.router("./db.json");
 const users = JSON.parse(fs.readFileSync("./users.json", "UTF-8"));
+const userdata = JSON.parse(fs.readFileSync("./user-data.db.json", "UTF-8"));
 const userdb = jsonServer.router("./users.json");
+const userdatadb = jsonServer.router("./user-data.db.json");
 
 server.use(jsonServer.defaults());
 server.use(bodyParser.urlencoded({ extended: true }));
@@ -29,6 +31,16 @@ server.use(
 function findUser({ email, password }) {
   return users.users.find(
     (user) => user.email === email && user.password === password
+  );
+}
+function findUserPlaylists(userId) {
+  return users.users.find(
+    (user) => user.id === userId
+  );
+}
+function findUserData(userId) {
+  return userdata.data.find(
+    (user) => user.userId === userId
   );
 }
 
@@ -52,10 +64,36 @@ server.post("/session/create-session", (req, res) => {
       .status(status)
       .json({ status, message: "E-mail não encontrado ou password incorreta" });
   } else {
-    req.session.user = { name: user.name, email: user.email };
+    req.session.user = { name: user.name, email: user.email, id: user.id };
     res.status(200).json(req.session.user);
   }
 });
+
+server.post("/playlists", (req, res) => {
+  const {userId} = req.body;
+  const playlists = findUserPlaylists(userId);
+  if (!playlists) {
+    const status = 404;
+    res
+      .status(status)
+      .json({ status, message: "Usuário não possui playlists" });
+  } else {
+    res.status(200).json(playlists.playlists);
+  }
+})
+
+server.post("/user-data", (req, res) => {
+  const {userId} = req.body;
+  const playlists = findUserData(userId);
+  if (!playlists) {
+    const status = 404;
+    res
+      .status(status)
+      .json({ status, message: "Usuário não possui dados" });
+  } else {
+    res.status(200).json(playlists);
+  }
+})
 
 
 server.post('/session/create-user', (req, res) => {
@@ -93,6 +131,8 @@ server.get("/session/user", (req, res) => {
     res.status(401).json({ status: 401, message: "Não autenticado" });
   }
 });
+
+
 
 server.get("/health", (req, res) => {
   res.status(200).json({ up: true }); 

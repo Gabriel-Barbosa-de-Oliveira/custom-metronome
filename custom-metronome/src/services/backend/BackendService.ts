@@ -15,7 +15,6 @@ export class BackendService {
     }
 
     async create(url: string, body: any) {
-        console.log(body)
         const { data } = await this.axiosInstance.post(url, body);
         return data;
     }

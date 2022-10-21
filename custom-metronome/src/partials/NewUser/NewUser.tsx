@@ -47,7 +47,7 @@ export default function NewUser() {
         try {
             await backendService.create("/session/create-user", { name, email, password });
             notifySuccess("Usuário criado com sucesso !");
-            navigate("/metronome");
+            navigate("/login");
         } catch (error) {
             notifyError("Erro ao criar novo usuário !");
         }

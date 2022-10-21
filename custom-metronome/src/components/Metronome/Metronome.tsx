@@ -1,4 +1,4 @@
-import { Button, Slider } from '@mui/material';
+import { Button, Card, CardContent, CardHeader, Slider, Typography } from '@mui/material';
 import { Component } from 'react';
 import NumberController from '../../shared/partials/NumberController/NumberController';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
@@ -13,6 +13,19 @@ import _ from 'lodash';
 import Footer from '../../partials/Footer/Footer';
 import Playlist from '../Playlist/Playlist';
 import { IUser } from '../../shared/interfaces/context/User.interface';
+import { BackendService } from '../../services/backend/BackendService';
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Filler,
+    Legend,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
 
 type IMetronomeState = {
     isPlaying: boolean,
@@ -22,10 +35,24 @@ type IMetronomeState = {
     currentPlayStatusComponent: JSX.Element,
     currentPlayStatusText: string,
     currentPulses: Array<IPulseControllerControlObject>;
+    lastVelocityUsed: number,
+    velocities: Array<number>,
+    chartData: any
 };
 
-export default class Metronome extends Component<{user: IUser | null}, IMetronomeState> {
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Filler,
+    Legend
+);
 
+export default class Metronome extends Component<{ user: IUser | null }, IMetronomeState> {
+    private documentCanvas: any;
     private click1: Howl = new Howl({
         src: require('./click2.mp3')
     });
@@ -34,6 +61,7 @@ export default class Metronome extends Component<{user: IUser | null}, IMetronom
     });
 
     metronomeInstance: any;
+    backendService: BackendService;
     constructor(props: any) {
         super(props);
         this.state = {
@@ -43,12 +71,34 @@ export default class Metronome extends Component<{user: IUser | null}, IMetronom
             beatsNumber: 4,
             currentPlayStatusComponent: <PlayCircleOutlineIcon />,
             currentPlayStatusText: "Play",
-            currentPulses: []
+            currentPulses: [],
+            lastVelocityUsed: 0,
+            velocities: [0],
+            chartData: {
+                labels: [""],
+                datasets: [{
+                    fill: false,
+                    label: 'Velocidades Utilizadas',
+                    backgroundColor: '#1976d2',
+                    borderColor: '#1976d2',
+                    data: [0],
+                }]
+            }
         };
         this.metronomeInstance = new Timer(() => { this.handleMetronomeClick() }, 60000 / this.state.metronomeValue, { immediate: true });
+        this.backendService = new BackendService();
         this.mapInitialPulses();
         Howler.volume(1)
-        console.log(props.user)
+    }
+
+    componentDidMount(): void {
+        this.documentCanvas = document.getElementById('myChart');
+        if (this.props.user)
+            this.getUserData();
+    }
+
+    mapUser() {
+        return JSON.parse(sessionStorage.getItem("user") || "{}");
     }
 
     mapInitialPulses(initialState?: boolean) {
@@ -109,6 +159,9 @@ export default class Metronome extends Component<{user: IUser | null}, IMetronom
             })
         } else {
             this.metronomeInstance.start();
+            this.mapNewLastVelocity();
+            this.addNewVelocity();
+            this.generateNewGraph();
             this.setState({
                 currentPlayStatusText: "Stop",
                 currentPlayStatusComponent: <StopCircleOutlinedIcon />
@@ -180,13 +233,60 @@ export default class Metronome extends Component<{user: IUser | null}, IMetronom
         this.setState({ currentPulses: newPulses, count: 0 })
     }
 
+    async getUserData() {
+        try {
+            const data = await this.backendService.create("/user-data", { userId: this.mapUser().id })
+            const newChartData = this.state.chartData;
+            newChartData.labels = data.velocities.map(() => { return "" });
+            newChartData.datasets[0].data = data.velocities;
+            const datasetsCopy = this.state.chartData.datasets.slice(0);
+            console.log(newChartData)
+
+            this.setState({
+                velocities: data.velocities,
+                lastVelocityUsed: data.lastVelocityUsed,
+                chartData: Object.assign(newChartData, this.state.chartData, {
+                    datasets: datasetsCopy
+                })
+            })
+        } catch {
+
+        }
+    }
+
+    mapNewLastVelocity() {
+        this.setState({ lastVelocityUsed: this.state.metronomeValue })
+    }
+
+    addNewVelocity() {
+        const newVelocities = this.state.velocities;
+        newVelocities.push(this.state.metronomeValue);
+        this.setState({ velocities: newVelocities })
+    }
+
+    generateNewGraph() {
+        const newChartData = this.state.chartData;
+        const {velocities } = this.state;
+        newChartData.labels = velocities.map(() => { return "" });
+        newChartData.datasets[0].data = velocities;
+        const datasetsCopy = this.state.chartData.datasets.slice(0);
+
+        this.setState({
+            chartData: Object.assign(newChartData, this.state.chartData, {
+                datasets: datasetsCopy
+            })
+        })
+    }
+
+
     render() {
 
         const { metronomeValue, beatsNumber, currentPlayStatusComponent, currentPlayStatusText } = this.state;
 
         return (
             <>
-                <HeaderMenu user={this.props.user} />
+                {/* <HeaderMenu user={this.props.user} /> */}
+                <HeaderMenu />
                 <section className="container">
                     <section className="metronome">
                         <section>
@@ -236,8 +336,35 @@ export default class Metronome extends Component<{user: IUser | null}, IMetronom
                             </div>
                         </section>
 
-                        <section className='application-mode'>
-                            <Playlist />
+                        <section className='application-data'>
+                            {/* <h3>Dados do Usuário</h3> */}
+                            <section className='application-mode'>
+                                <Card variant="outlined">
+                                    <CardHeader title={"Última execução"} />
+                                    <CardContent sx={{ flex: '1 0 auto' }}>
+                                        <Typography color="text.secondary" component="div" variant="h5">
+                                            {this.state.lastVelocityUsed} bpms
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                                <Card variant="outlined">
+                                    <CardHeader title={"Maior velocidade atingida"} />
+                                    <CardContent sx={{ flex: '1 0 auto' }}>
+                                        <Typography color="text.secondary" component="div" variant="h5">
+                                            {Math.max(...this.state.velocities)} bpms
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                                <Card variant="outlined" id="graph">
+                                    {/* <CardHeader title={"Evolução"} /> */}
+                                    <CardContent sx={{ flex: '1 0 auto' }}>
+                                        {/* <canvas id="myChart"></canvas> */}
+                                        <Line data={this.state.chartData} />
+
+                                    </CardContent>
+                                </Card>
+                                {/* <Playlist /> */}
+                            </section>
                         </section>
                     </section>
 
