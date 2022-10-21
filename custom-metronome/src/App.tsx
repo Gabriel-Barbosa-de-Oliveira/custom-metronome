@@ -27,9 +27,10 @@ function App() {
 
   useEffect(() => {
     try {
-      const data = (getUser() as any);
+      const { data } = (getUser() as any);
       if (data) {
         setUser(data)
+        sessionStorage.setItem("user", JSON.stringify(data));
       }
     } catch {
       onSignOut();

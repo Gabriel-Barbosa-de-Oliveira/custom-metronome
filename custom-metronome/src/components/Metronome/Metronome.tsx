@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, CardHeader, Slider, Typography } from '@mui/material';
+import { Button, Card, CardActionArea, CardContent, CardHeader, Slider, Typography } from '@mui/material';
 import { Component } from 'react';
 import NumberController from '../../shared/partials/NumberController/NumberController';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
@@ -81,7 +81,7 @@ export default class Metronome extends Component<{ user: IUser | null }, IMetron
                     label: 'Velocidades Utilizadas',
                     backgroundColor: '#1976d2',
                     borderColor: '#1976d2',
-                    data: [0],
+                    data: [60]
                 }]
             }
         };
@@ -97,8 +97,13 @@ export default class Metronome extends Component<{ user: IUser | null }, IMetron
             this.getUserData();
     }
 
-    mapUser() {
-        return JSON.parse(sessionStorage.getItem("user") || "{}");
+    getUserSession() {
+        try {
+            return JSON.parse(sessionStorage.getItem("user") as any);
+        } catch {
+            return null;
+        }
+
     }
 
     mapInitialPulses(initialState?: boolean) {
@@ -235,7 +240,7 @@ export default class Metronome extends Component<{ user: IUser | null }, IMetron
 
     async getUserData() {
         try {
-            const data = await this.backendService.create("/user-data", { userId: this.mapUser().id })
+            const data = await this.backendService.create("/user-data", { userId: this.getUserSession().id })
             const newChartData = this.state.chartData;
             newChartData.labels = data.velocities.map(() => { return "" });
             newChartData.datasets[0].data = data.velocities;
@@ -266,7 +271,7 @@ export default class Metronome extends Component<{ user: IUser | null }, IMetron
 
     generateNewGraph() {
         const newChartData = this.state.chartData;
-        const {velocities } = this.state;
+        const { velocities } = this.state;
         newChartData.labels = velocities.map(() => { return "" });
         newChartData.datasets[0].data = velocities;
         const datasetsCopy = this.state.chartData.datasets.slice(0);
@@ -336,8 +341,9 @@ export default class Metronome extends Component<{ user: IUser | null }, IMetron
                             </div>
                         </section>
 
+
+
                         <section className='application-data'>
-                            {/* <h3>Dados do Usuário</h3> */}
                             <section className='application-mode'>
                                 <Card variant="outlined">
                                     <CardHeader title={"Última execução"} />
@@ -357,11 +363,13 @@ export default class Metronome extends Component<{ user: IUser | null }, IMetron
                                 </Card>
                                 <Card variant="outlined" id="graph">
                                     {/* <CardHeader title={"Evolução"} /> */}
-                                    <CardContent sx={{ flex: '1 0 auto' }}>
+                                    <CardContent sx={{ flex: '1 0 auto', paddingBottom: 0 }}>
                                         {/* <canvas id="myChart"></canvas> */}
-                                        <Line data={this.state.chartData} />
-
+                                        <Line data={this.state.chartData}/>
                                     </CardContent>
+                                    <div className='card-footer'>
+                                        {this.getUserSession() ? "" : <small>Faça Login para salvar seu progresso definitvamente</small>}
+                                    </div>
                                 </Card>
                                 {/* <Playlist /> */}
                             </section>

@@ -46,11 +46,21 @@ function findUserData(userId) {
 
 function createUser({ name, email, password }) {
   return {
-    "id": randomUUID(),
+    "userId": randomUUID(),
     "name": name,
     "email": email,
     "password": password,
     "playlists": []
+  }
+}
+
+function createUserData(id) {
+  return {
+    "id": id,
+    "lastVelocityUsed": 60,
+    "velocities": [
+      60
+    ]
   }
 }
 
@@ -70,7 +80,7 @@ server.post("/session/create-session", (req, res) => {
 });
 
 server.post("/playlists", (req, res) => {
-  const {userId} = req.body;
+  const { userId } = req.body;
   const playlists = findUserPlaylists(userId);
   if (!playlists) {
     const status = 404;
@@ -83,7 +93,7 @@ server.post("/playlists", (req, res) => {
 })
 
 server.post("/user-data", (req, res) => {
-  const {userId} = req.body;
+  const { userId } = req.body;
   const playlists = findUserData(userId);
   if (!playlists) {
     const status = 404;
@@ -98,15 +108,11 @@ server.post("/user-data", (req, res) => {
 
 server.post('/session/create-user', (req, res) => {
   const db = userdb.db; // Assign the lowdb instance
+  const userdataDb = userdatadb.db; // Assign the lowdb instance
+  const newUser = createUser(req.body)
+  insert(db, 'users', newUser);
+  insert(userdataDb, 'data', createUserData(newUser.id));
 
-  if (Array.isArray(req.body)) {
-    req.body.forEach(element => {
-      insert(db, 'users', element); // Add a post
-    });
-  }
-  else {
-    insert(db, 'users', createUser(req.body)); // Add a post
-  }
   res.sendStatus(200)
 
   /**
@@ -135,7 +141,7 @@ server.get("/session/user", (req, res) => {
 
 
 server.get("/health", (req, res) => {
-  res.status(200).json({ up: true }); 
+  res.status(200).json({ up: true });
 });
 
 server.post("/session/logout", (req, res) => {
