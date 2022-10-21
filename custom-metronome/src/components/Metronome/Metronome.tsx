@@ -285,7 +285,8 @@ export default class Metronome extends Component<{ user: IUser | null }, IMetron
 
         return (
             <>
-                <HeaderMenu user={this.props.user} />
+                {/* <HeaderMenu user={this.props.user} /> */}
+                <HeaderMenu />
                 <section className="container">
                     <section className="metronome">
                         <section>
