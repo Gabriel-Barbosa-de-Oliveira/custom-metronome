@@ -45,7 +45,7 @@ export default function NewUser() {
 
     async function postNewUser() {
         try {
-            await backendService.create("/session/create-user", { name, email, password });
+            await backendService.create("/register", { name, email, password });
             notifySuccess("Usuário criado com sucesso !");
             navigate("/login");
         } catch (error) {

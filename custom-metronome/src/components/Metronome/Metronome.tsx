@@ -240,16 +240,17 @@ export default class Metronome extends Component<{ user: IUser | null }, IMetron
 
     async getUserData() {
         try {
-            const data = await this.backendService.create("/user-data", { userId: this.getUserSession().id })
+            const data = await this.backendService.read(`/data?userId=${this.getUserSession().id}`)
+            console.log(data)
             const newChartData = this.state.chartData;
-            newChartData.labels = data.velocities.map(() => { return "" });
-            newChartData.datasets[0].data = data.velocities;
+            newChartData.labels = data[0].velocities.map(() => { return "" });
+            newChartData.datasets[0].data = data[0].velocities;
             const datasetsCopy = this.state.chartData.datasets.slice(0);
             console.log(newChartData)
 
             this.setState({
-                velocities: data.velocities,
-                lastVelocityUsed: data.lastVelocityUsed,
+                velocities: data[0].velocities,
+                lastVelocityUsed: data[0].lastVelocityUsed,
                 chartData: Object.assign(newChartData, this.state.chartData, {
                     datasets: datasetsCopy
                 })

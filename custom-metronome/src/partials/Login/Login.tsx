@@ -32,9 +32,9 @@ export default function Login(props: ILoginScreenProps) {
 
   async function createUserSession() {
     try {
-      const data  = await backendService.create("/session/create-session", { email, password });
+      const data  = await backendService.create("/login", { email, password });
       if (props.onSignIn) props.onSignIn(data);
-      sessionStorage.setItem("user", JSON.stringify(data));
+      sessionStorage.setItem("user", JSON.stringify(data.user));
       toastrService.notifySuccess("Login realizado com sucesso !");
       navigate("/metronome");
     } catch {

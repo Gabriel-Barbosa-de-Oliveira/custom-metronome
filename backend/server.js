@@ -43,6 +43,11 @@ function findUserData(userId) {
     (user) => user.userId === userId
   );
 }
+function findUserDataIndex(userId) {
+  return userdata.data.findIndex(
+    (user) => user.userId === userId
+  );
+}
 
 function createUser({ name, email, password }) {
   return {
@@ -126,6 +131,37 @@ server.post('/session/create-user', (req, res) => {
     console.log(table)
     if (_.isEmpty(table.find(data).value())) {
       table.push(data).write();
+    }
+  }
+});
+
+server.put('/user-data', (req, res) => {
+  const db = userdb.db; // Assign the lowdb instance
+  const userdataDb = userdatadb.db; // Assign the lowdb instance
+  const newUser = createUser(req.body)
+  edit(userdataDb, 'data', req.body);
+
+  res.sendStatus(200)
+
+  /**
+   * Checks whether the id of the new data already exists in the DB
+   * @param {*} db - DB object
+   * @param {String} collection - Name of the array / collection in the DB / JSON file
+   * @param {*} data - New record
+   */
+  function edit(db, collection, data) {
+    const table = db.get(collection);
+    console.log(data)
+    const index = findUserDataIndex(data.userId)
+    console.log(index)
+    console.log(table.find(data.id).value(), "id")
+    
+    if (index === -1) {
+      res.status(400)
+      .json({ status: 404, message: "Id não pertence a esse usuário" });
+    }else{
+      table[index] = data;
+      
     }
   }
 });
