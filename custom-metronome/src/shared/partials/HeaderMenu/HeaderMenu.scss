@@ -27,6 +27,13 @@
     display: none;
 }
 
+.user-icon-container{
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    width: 100%;
+}
+
 @media only screen and (max-width: 480px) {
 
     .header-menu-container{
@@ -38,7 +45,8 @@
 
     #start,
     #login,
-    #new-user {
+    #new-user,
+    #user {
         display: none;
     }
 

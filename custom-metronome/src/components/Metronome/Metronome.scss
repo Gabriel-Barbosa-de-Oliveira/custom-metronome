@@ -139,6 +139,16 @@
     .sub-text {
         padding: 16px;
     }
+
+    .application-mode {
+        margin-top: 32px;
+        width: 100%;
+        grid-template-columns: 1fr;
+        grid-gap: 16px;
+        grid-template-areas: "a"
+                             "b"
+                             "c";
+    }
 }
 
 .gray-text {

@@ -20,6 +20,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { useAuthContext } from '../../context/authContext';
 import { BackendService } from '../../../services/backend/BackendService';
 import { ToastrService } from '../../services/Toastr.service';
+import { ListItemIcon } from '@mui/material';
 export default class HeaderMenu extends Component<{ user?: IUser | null }, any> {
     constructor(props: any) {
         super(props);
@@ -50,11 +51,6 @@ export default class HeaderMenu extends Component<{ user?: IUser | null }, any> 
         const user = sessionStorage.getItem("user");
         return user ? JSON.parse(user) : null;
     }
-
-    // componentWillReceiveProps(nextProps: Readonly<{ user: IUser | null; }>): void {
-    //     console.log(nextProps)
-    //     this.setState({ user: nextProps.user });
-    // }
 
     async logOut() {
         // signOutEndpoint();
@@ -97,7 +93,7 @@ export default class HeaderMenu extends Component<{ user?: IUser | null }, any> 
                                 !this.state.user ? (<>
                                     <Button variant="contained" color="primary" id="new-user" component={Link} to={"/new-user"}>Cadastre-se</Button>
                                     <Button variant="outlined" color="primary" id="login" component={Link} to={"/login"}>Entrar</Button></>) :
-                                    <Button variant="outlined"
+                                    <Button variant="outlined" id="user"
                                         aria-controls={this.state.open ? 'basic-menu' : undefined}
                                         aria-haspopup="true"
                                         aria-expanded={this.state.open ? 'true' : undefined}
@@ -115,7 +111,7 @@ export default class HeaderMenu extends Component<{ user?: IUser | null }, any> 
                                     'aria-labelledby': 'basic-button',
                                 }}
                             >
-                                <MenuItem onClick={this.handleClose}>Logout</MenuItem>
+                                <MenuItem onClick={this.handleClose}>Sair</MenuItem>
                             </Menu>
                             <IconButton onClick={toggleDrawer("right", true)} id="mobile-button">
                                 <MenuIcon />
@@ -130,18 +126,40 @@ export default class HeaderMenu extends Component<{ user?: IUser | null }, any> 
 
                 >
                     <List >
-                        <ListItem>
-                            <ListItemButton component={Link} to={"/new-user"}>
-                                <ListItemText primary={"Cadastre-se"} />
-                            </ListItemButton>
-
-                        </ListItem>
-                        <Divider />
-                        <ListItem>
-                            <ListItemButton component={Link} to={"/login"}>
-                                <ListItemText primary={"Login"} />
-                            </ListItemButton>
-                        </ListItem>
+                        {
+                            !this.state.user ? <>
+                                <ListItem>
+                                    <ListItemButton component={Link} to={"/new-user"}>
+                                        <ListItemText primary={"Cadastre-se"} />
+                                    </ListItemButton>
+                                </ListItem>
+                                <Divider />
+                                <ListItem>
+                                    <ListItemButton component={Link} to={"/login"}>
+                                        <ListItemText primary={"Login"} />
+                                    </ListItemButton>
+                                </ListItem>
+                            </> :
+                                <>
+                                    <ListItemButton>
+                                        <div className='user-icon-container'>
+                                            <AccountCircleIcon />
+                                            <ListItemText primary={this.state.user.name} />
+                                        </div>
+                                    </ListItemButton>
+                                    <Divider />
+                                    <ListItemButton component={Link} to={"/"}>
+                                        <ListItemText primary={"Home"} />
+                                    </ListItemButton>
+                                    <ListItemButton component={Link} to={"/metronome"}>
+                                        <ListItemText primary={"Metronomo"} />
+                                    </ListItemButton>
+                                    <Divider />
+                                    <ListItemButton onClick={this.handleClose}>
+                                        <ListItemText primary={"Sair"} />
+                                    </ListItemButton>
+                                </>
+                        }
                     </List>
                 </Drawer>
             </>
