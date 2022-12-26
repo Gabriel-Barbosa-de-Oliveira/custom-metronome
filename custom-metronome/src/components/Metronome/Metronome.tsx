@@ -1,4 +1,4 @@
-import { Button, Slider } from '@mui/material';
+import { Button, Card, CardActionArea, CardContent, CardHeader, Slider, Typography } from '@mui/material';
 import { Component } from 'react';
 import NumberController from '../../shared/partials/NumberController/NumberController';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
@@ -10,6 +10,23 @@ import HeaderMenu from '../../shared/partials/HeaderMenu/HeaderMenu';
 import PulseController from '../../partials/PulseController/PulseController';
 import { IPulseControllerControlObject } from '../../shared/interfaces/props/IPulseControllerControlObject';
 import _ from 'lodash';
+import Footer from '../../partials/Footer/Footer';
+import Playlist from '../Playlist/Playlist';
+import { IUser } from '../../shared/interfaces/context/User.interface';
+import { BackendService } from '../../services/backend/BackendService';
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Filler,
+    Legend,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
+import { ToastrService } from '../../shared/services/Toastr.service';
 
 type IMetronomeState = {
     isPlaying: boolean,
@@ -19,10 +36,25 @@ type IMetronomeState = {
     currentPlayStatusComponent: JSX.Element,
     currentPlayStatusText: string,
     currentPulses: Array<IPulseControllerControlObject>;
+    lastVelocityUsed: number,
+    velocities: Array<number>,
+    chartData: any,
+    dataId: any
 };
 
-export default class Metronome extends Component<{}, IMetronomeState> {
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Filler,
+    Legend
+);
 
+export default class Metronome extends Component<{ user: IUser | null }, IMetronomeState> {
+    private documentCanvas: any;
     private click1: Howl = new Howl({
         src: require('./click2.mp3')
     });
@@ -31,6 +63,7 @@ export default class Metronome extends Component<{}, IMetronomeState> {
     });
 
     metronomeInstance: any;
+    backendService: BackendService;
     constructor(props: any) {
         super(props);
         this.state = {
@@ -40,11 +73,40 @@ export default class Metronome extends Component<{}, IMetronomeState> {
             beatsNumber: 4,
             currentPlayStatusComponent: <PlayCircleOutlineIcon />,
             currentPlayStatusText: "Play",
-            currentPulses: []
+            currentPulses: [],
+            lastVelocityUsed: 0,
+            velocities: [0],
+            dataId: null,
+            chartData: {
+                labels: [""],
+                datasets: [{
+                    fill: false,
+                    label: 'Velocidades Utilizadas',
+                    backgroundColor: '#1976d2',
+                    borderColor: '#1976d2',
+                    data: [60]
+                }]
+            }
         };
         this.metronomeInstance = new Timer(() => { this.handleMetronomeClick() }, 60000 / this.state.metronomeValue, { immediate: true });
+        this.backendService = new BackendService();
         this.mapInitialPulses();
         Howler.volume(1)
+    }
+
+    componentDidMount(): void {
+        this.documentCanvas = document.getElementById('myChart');
+        if (this.props.user)
+            this.getUserData();
+    }
+
+    getUserSession() {
+        try {
+            return JSON.parse(sessionStorage.getItem("user") as any);
+        } catch {
+            return null;
+        }
+
     }
 
     mapInitialPulses(initialState?: boolean) {
@@ -105,6 +167,12 @@ export default class Metronome extends Component<{}, IMetronomeState> {
             })
         } else {
             this.metronomeInstance.start();
+            if (this.getUserSession()) {
+                this.putUserData();
+            } else {
+                this.mapUserData();
+            }
+
             this.setState({
                 currentPlayStatusText: "Stop",
                 currentPlayStatusComponent: <StopCircleOutlinedIcon />
@@ -123,9 +191,9 @@ export default class Metronome extends Component<{}, IMetronomeState> {
 
         let index = this.state.currentPulses.findIndex(x => (x.position === newCount && x.isActive));
 
-        if(index != -1){
+        if (index != -1) {
             this.click1.play();
-        }else{
+        } else {
             this.click2.play();
         }
 
@@ -176,63 +244,170 @@ export default class Metronome extends Component<{}, IMetronomeState> {
         this.setState({ currentPulses: newPulses, count: 0 })
     }
 
+    async getUserData() {
+        try {
+            const data = await this.backendService.read(`/data?userId=${this.getUserSession().id}`);
+            const newChartData = this.state.chartData;
+            newChartData.labels = data[0].velocities.map(() => { return "" });
+            newChartData.datasets[0].data = data[0].velocities;
+            const datasetsCopy = this.state.chartData.datasets.slice(0);
+            console.log(newChartData)
+
+            this.setState({
+                dataId: data[0].id,
+                velocities: data[0].velocities,
+                lastVelocityUsed: data[0].lastVelocityUsed,
+                chartData: Object.assign(newChartData, this.state.chartData, {
+                    datasets: datasetsCopy
+                })
+            })
+        } catch {
+
+        }
+    }
+
+    async putUserData() {
+
+        const userData = {
+            "userId": this.getUserSession().id,
+            "lastVelocityUsed": this.state.lastVelocityUsed,
+            "velocities": this.state.velocities
+        }
+
+        try {
+            const data = await this.backendService.update(`/data/${this.state.dataId}`, userData);
+            new ToastrService().notifySuccess("Dados salvos com sucesso");
+        } catch {
+            new ToastrService().notifySuccess("Erro ao salvar dados");
+        }
+
+        this.mapUserData();
+    }
+
+    mapUserData() {
+        this.mapNewLastVelocity();
+        this.addNewVelocity();
+        this.generateNewGraph();
+    }
+
+    mapNewLastVelocity() {
+        this.setState({ lastVelocityUsed: this.state.metronomeValue })
+    }
+
+    addNewVelocity() {
+        const newVelocities = this.state.velocities;
+        newVelocities.push(this.state.metronomeValue);
+        this.setState({ velocities: newVelocities })
+    }
+
+    generateNewGraph() {
+        const newChartData = this.state.chartData;
+        const { velocities } = this.state;
+        newChartData.labels = velocities.map(() => { return "" });
+        newChartData.datasets[0].data = velocities;
+        const datasetsCopy = this.state.chartData.datasets.slice(0);
+
+        this.setState({
+            chartData: Object.assign(newChartData, this.state.chartData, {
+                datasets: datasetsCopy
+            })
+        })
+    }
+
+
     render() {
 
         const { metronomeValue, beatsNumber, currentPlayStatusComponent, currentPlayStatusText } = this.state;
 
         return (
             <>
+                {/* <HeaderMenu user={this.props.user} /> */}
                 <HeaderMenu />
                 <section className="container">
                     <section className="metronome">
                         <section>
-                            <div className="bpm-display">
-                                <span className="tempo">{metronomeValue}</span>
-                                <span className="bpm">BPM</span>
-                            </div>
-                            <div className="tempo-text">Nice and steady</div>
-                            <section className='pulse-controller-container'>
-                                <PulseController changed={this.handlePulseIntensityChange} pulses={this.state.currentPulses} />
-                            </section>
-                            <NumberController onButtonClick={this.handleBeatChange} component={
-                                <div className='slider-container'>
+                            <div>
 
-                                    <Slider
-                                        aria-label="slider"
-                                        defaultValue={60}
-                                        min={20}
-                                        max={280}
-                                        track={false}
-                                        value={metronomeValue}
-                                        valueLabelDisplay="auto"
-                                        onChange={this.changeValue}
-                                    />
+                                <div className="bpm-display">
+                                    <span className="tempo">{metronomeValue}</span>
+                                    <span className="bpm">BPM</span>
                                 </div>
-                            } />
+                                <section className='pulse-controller-container'>
+                                    <PulseController changed={this.handlePulseIntensityChange} pulses={this.state.currentPulses} />
+                                </section>
+                                <NumberController onButtonClick={this.handleBeatChange} component={
+                                    <div className='slider-container'>
 
-                            <section className="action-button">
-                                <Button size="large" startIcon={currentPlayStatusComponent} onClick={this.handlePlayStatus}>
-                                    {currentPlayStatusText}
-                                </Button>
-                            </section>
+                                        <Slider
+                                            aria-label="slider"
+                                            defaultValue={60}
+                                            min={20}
+                                            max={280}
+                                            track={false}
+                                            value={metronomeValue}
+                                            valueLabelDisplay="auto"
+                                            onChange={this.changeValue}
+                                        />
+                                    </div>
+                                } />
 
-                            <NumberController disableLeft={(this.state.beatsNumber == 2)} disableRight={(this.state.beatsNumber == 12)} onButtonClick={this.handleMeasuresChange} component={
-                                <div className="beats-number-container">{beatsNumber}</div>
-                            } />
+                                <section className="action-button">
+                                    <Button size="large" startIcon={currentPlayStatusComponent} onClick={this.handlePlayStatus}>
+                                        {currentPlayStatusText}
+                                    </Button>
+                                </section>
 
-                            <div className="beats-per-measure-text">
-                                <span >Beats per measure</span>
+                                <NumberController disableLeft={(this.state.beatsNumber == 2)} disableRight={(this.state.beatsNumber == 12)} onButtonClick={this.handleMeasuresChange} component={
+                                    <div className="beats-number-container">{beatsNumber}</div>
+                                } />
+
+                                <div className="beats-per-measure-text">
+                                    <span>Batidas por Compasso</span>
+                                </div>
+                            </div>
+                            <div className='sub-text'>
+                                <p><span><b>Azul</b></span> = Nota com acentuação</p>
+                                <p><span className='gray-text'>Cinza</span> = Nota sem acentuação</p>
+                                <p>Selecione a batida que gostaria de acentuar clickando no circulo abaixo dos bpms</p>
                             </div>
                         </section>
-                        <section>
-                            <div className='sub-text'>
-                                <h1>Custom Metronome</h1>
-                                <p>Utilize os controles de tempo para obter a forma definitiva de marcação de ritmo</p>
-                                <p>Azul = Nota com acentuação</p>
-                                <p>Cinza = Nota sem acentuação</p>
-                            </div>
+
+
+
+                        <section className='application-data'>
+                            <section className='application-mode'>
+                                <Card variant="outlined">
+                                    <CardHeader title={"Última execução"} />
+                                    <CardContent sx={{ flex: '1 0 auto' }}>
+                                        <Typography color="text.secondary" component="div" variant="h5">
+                                            {this.state.lastVelocityUsed} bpms
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                                <Card variant="outlined">
+                                    <CardHeader title={"Maior velocidade atingida"} />
+                                    <CardContent sx={{ flex: '1 0 auto' }}>
+                                        <Typography color="text.secondary" component="div" variant="h5">
+                                            {Math.max(...this.state.velocities)} bpms
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                                <Card variant="outlined" id="graph">
+                                    {/* <CardHeader title={"Evolução"} /> */}
+                                    <CardContent sx={{ flex: '1 0 auto', paddingBottom: 0 }}>
+                                        {/* <canvas id="myChart"></canvas> */}
+                                        <Line data={this.state.chartData} />
+                                    </CardContent>
+                                    <div className='card-footer'>
+                                        {this.getUserSession() ? "" : <small>Faça Login para salvar seu progresso definitvamente</small>}
+                                    </div>
+                                </Card>
+                                {/* <Playlist /> */}
+                            </section>
                         </section>
                     </section>
+
+                    <Footer />
                 </section>
 
             </>
